@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Info, StarIcon } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
@@ -12,7 +13,9 @@ const CarouselCard = ({ movie, logoUrl }) => {
       <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent rounded-lg"></div>
       <div className="md:w-1/4 gap-3 flex flex-col max-md:ms-6 ms-32 justify-center relative z-10 max-md:mb-16 max-md:w-full max-md:gap-2">
         {logoUrl ? (
-          <img
+          <Image
+            width={200}
+            height={100}
             src={logoUrl}
             alt={`${movie.title} logo`}
             className="w-full mb-2 w-1/6 object-contain max-md:w-1/2"

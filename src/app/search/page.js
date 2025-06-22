@@ -60,25 +60,31 @@ const genreMap = {
 }
 
 const SearchPage = () => {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [recentSearches, setRecentSearches] = useState(JSON.parse(sessionStorage.getItem('recentSearches')) || []);
-  const [popularSearches] = useState(["Avengers", "Spider-Man", "John Wick", "Fast & Furious", "Mission Impossible"]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [recentSearches, setRecentSearches] = useState([]); // Initialize as empty array
+  const [popularSearches] = useState(['Avengers', 'Spider-Man', 'John Wick', 'Fast & Furious', 'Mission Impossible']);
 
   const debouncedSearchQuery = useDebounce(searchQuery, 500);
-  const backdropUrl = `${process.env.NEXT_PUBLIC_IMAGE_URL}`;
+  const backdropUrl = useState(`${process.env.NEXT_PUBLIC_IMAGE_URL}`);
 
   const { results, status, error } = useSelector((state) => state.search);
   const dispatch = useDispatch();
 
-  // Perform search when debounced query changes
+  // Load recent searches from sessionStorage on client-side mount
+  useEffect(() => {
+    const storedSearches = sessionStorage.getItem('recentSearches');
+    if (storedSearches) {
+      setRecentSearches(JSON.parse(storedSearches));
+    }
+  }, []); // Perform search when debounced query changes
   useEffect(() => {
     if (debouncedSearchQuery.trim()) {
       dispatch(fetchSearch(debouncedSearchQuery));
 
       // Add to recent searches
       if (!recentSearches.includes(debouncedSearchQuery)) {
-        setRecentSearches((prev) => {
-          const updatedSearches = [debouncedSearchQuery, ...prev.slice(0, 4)];
+        setRecentSearches((prevSearches) => {
+          const updatedSearches = [debouncedSearchQuery, ...prevSearches.slice(0, 4)];
           sessionStorage.setItem('recentSearches', JSON.stringify(updatedSearches));
           return updatedSearches;
         });

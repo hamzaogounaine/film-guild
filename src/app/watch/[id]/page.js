@@ -203,7 +203,9 @@ const Page = () => {
       <div className="relative">
         {movie.backdrop_path && (
           <div className="absolute inset-0 opacity-20">
-            <img
+            <Image
+              width={1920}
+              height={800}
               src={`https://image.tmdb.org/t/p/w1920_and_h800_multi_faces${movie.backdrop_path}`}
               alt={movie.title}
               className="w-full h-full object-cover"
