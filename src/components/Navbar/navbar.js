@@ -4,13 +4,11 @@ import { useState, useEffect } from "react";
 import { Clapperboard, HomeIcon, MagnetIcon, Menu, Moon, MoveIcon, Search, Sun, Tv2Icon, TvIcon, X } from "lucide-react";
 import { Button } from "../ui/button";
 import { useDispatch, useSelector } from "react-redux";
-import { toggleTheme } from "@/redux/themeSlice";
 import FuzzyText from "../effects/fuzzyText";
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const { theme } = useSelector((state) => state.theme);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -84,9 +82,9 @@ export function Navbar() {
             >
               Watch List
             </Button>
-            <Button onClick={() => dispatch(toggleTheme())}>
+            {/* <Button onClick={() => dispatch(toggleTheme())}>
               {theme === "light" ? <Moon /> : <Sun />}
-            </Button>
+            </Button> */}
           </div>
        <div className="md:hidden flex items-center gap-3">
               {/* <Button variant={isScrolled ? "default" : "outline"}  className={`transition-all duration-300 ${
@@ -96,9 +94,9 @@ export function Navbar() {
               }`}>
                 <Search />
               </Button> */}
-              <Button onClick={() => dispatch(toggleTheme())}>
+              {/* <Button onClick={() => dispatch(toggleTheme())}>
                 {theme === "light" ? <Moon /> : <Sun />}
-              </Button>
+              </Button> */}
        </div>
         </div>
       </div>

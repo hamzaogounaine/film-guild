@@ -5,14 +5,12 @@ import { useSelector } from 'react-redux';
 import MobileMenu from '@/components/Navbar/MobileMenu';
 
 const MainLayout = ({children}) => {
-  const {theme} = useSelector(state => state.theme)
   
   // Define colors based on theme
-  const patternColor = theme === 'dark' ? 'white' : 'black';
   
   return (
    
-    <div className={`min-h-screen transition-colors ${theme} duration-300 ${theme === 'dark' ? 'bg-background text-white' : 'bg-white text-black'}`}>
+    <div className={`min-h-screen transition-colors dark duration-300  'bg-background text-white'}`}>
     <div className="relative z-10">
       <Navbar />
       <main className=" ">
