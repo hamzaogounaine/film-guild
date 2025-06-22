@@ -35,6 +35,7 @@ const Page = () => {
       flag: "🇺🇸",
       type: "premium",
       speed: "Ultra Fast",
+      baseUrl: "https://vidsrc.me/embed/movie"
     },
     {
       id: 2,
@@ -46,6 +47,7 @@ const Page = () => {
       flag: "🇺🇸",
       type: "standard",
       speed: "Fast",
+      baseUrl: "https://embed.su/embed/movie"
     },
     {
       id: 3,
@@ -57,17 +59,19 @@ const Page = () => {
       flag: "🇪🇺",
       type: "premium",
       speed: "Ultra Fast",
+      baseUrl: "https://putlocker.vip/embed/movie"
     },
     {
       id: 4,
       name: "Server 4 - Basic",
       quality: "720p",
       ping: 73,
-      status: "offline",
+      status: "online",
       location: "Asia",
       flag: "🌏",
       type: "basic",
       speed: "Medium",
+      baseUrl: "https://vidsrc.icu/embed/movie"
     },
     {
       id: 5,
@@ -79,6 +83,7 @@ const Page = () => {
       flag: "🇬🇧",
       type: "ultra",
       speed: "Lightning",
+      baseUrl: "https://vidlink.pro/movie"
     },
     {
       id: 6,
@@ -90,6 +95,7 @@ const Page = () => {
       flag: "🇨🇦",
       type: "basic",
       speed: "Medium",
+      baseUrl: "https://vidsrc.net/embed/movie"
     },
     {
       id: 7,
@@ -101,8 +107,9 @@ const Page = () => {
       flag: "🇦🇺",
       type: "standard",
       speed: "Fast",
-    },
-  ]
+      baseUrl: "https://www.2embed.cc/embed"
+    }
+  ];
 
   const [movie, setMovie] = useState({})
   const [selectedServer, setSelectedServer] = useState(servers[0])
@@ -288,7 +295,7 @@ const Page = () => {
                 )}
 
                 <iframe
-                  src={`https://vidsrc.xyz/embed/movie/${id}`}
+                  src={`${selectedServer.baseUrl}/${id}`}
                   allowFullScreen
                   scrolling="no"
                   width="100%"
