@@ -65,7 +65,7 @@ const SearchPage = () => {
   const [popularSearches] = useState(["Avengers", "Spider-Man", "John Wick", "Fast & Furious", "Mission Impossible"])
 
   const debouncedSearchQuery = useDebounce(searchQuery, 500)
-  const backdropUrl = `${ process.env.IMAGE_URL}`
+  const backdropUrl = `${ process.env.NEXT_PUBLIC_IMAGE_URL}`
 
   const { results, status, error } = useSelector((state) => state.search)
   const dispatch = useDispatch()

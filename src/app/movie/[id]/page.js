@@ -20,6 +20,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
+import Link from "next/link";
 
 // Utility functions
 const formatCurrency = (amount) => {
@@ -67,8 +68,8 @@ const Page = () => {
     );
   }
 
-  const backdropUrl = `${process.env.BACKDROP_URL}${movieDetails.backdrop_path}`;
-  const posterUrl = `${process.env.BACKDROP_URL}${movieDetails.poster_path}`;
+  const backdropUrl = `${process.env.NEXT_PUBLIC_BACKDROP_URL}${movieDetails.backdrop_path}`;
+  const posterUrl = `${process.env.NEXT_PUBLIC_BACKDROP_URL}${movieDetails.poster_path}`;
   const releaseYear = getReleaseYear(movieDetails.release_date);
   const formattedRuntime = formatRuntime(movieDetails.runtime);
   const formattedBudget = formatCurrency(movieDetails.budget);
@@ -173,8 +174,10 @@ const Page = () => {
                   size="sm"
                   className="bg-red-600 hover:bg-red-700 w-full sm:w-auto text-white"
                 >
+                  <Link href={`/watch/${id}`} className="flex items-center">
                   <Play className="w-4 h-4 mr-2" />
                   Watch
+                  </Link>
                 </Button>
                 <Button
                   size="sm"
@@ -395,7 +398,7 @@ const Page = () => {
                         <Image
                           width={256}
                           height={384}
-                          src={`${process.env.BACKDROP_URL}${company.logo_path}`}
+                          src={`${process.env.NEXT_PUBLIC_BACKDROP_URL}${company.logo_path}`}
                           alt={company.name}
                           className="w-10 h-10 sm:w-12 sm:h-12 object-contain"
                         />
@@ -430,7 +433,7 @@ const Page = () => {
                     width={256}
                     height={384}
                     src={`${
-                      process.env.BACKDROP_URL
+                      process.env.NEXT_PUBLIC_BACKDROP_URL
                     }${movieDetails.belongs_to_collection.poster_path}`}
                     alt={movieDetails.belongs_to_collection.name}
                     className="w-32 h-48 sm:w-48 sm:h-72 object-cover rounded-lg mx-auto sm:mx-0"

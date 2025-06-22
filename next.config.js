@@ -1,10 +1,6 @@
 /** @type {import('next').NextConfig} */
 const fs = require('fs');
 
-
-const {config} = require('dotenv');
-config()
-
 const nextConfig = {
   reactStrictMode: true,
   images: {

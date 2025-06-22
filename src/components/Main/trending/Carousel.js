@@ -28,10 +28,10 @@ export default function TrendingCarousel() {
   const fetchLogo = async (id) => {
     try {
       const imagesResponse = await axios.get(
-        `${process.env.BASE_URL}/movie/${id}/images?api_key=${process.env.TMDB_API}&include_image_language=en,null`
+        `${process.env.NEXT_PUBLIC_BASE_URL}/movie/${id}/images?api_key=${process.env.NEXT_PUBLIC_TMDB_API}&include_image_language=en,null`
       );
       const logo = imagesResponse.data.logos.filter((el) => el.iso_639_1 === "en")[0]?.file_path;
-      return logo ? `${process.env.BACKDROP_URL}${logo}` : null;
+      return logo ? `${process.env.NEXT_PUBLIC_BACKDROP_URL}${logo}` : null;
     } catch (error) {
       console.error(`Error fetching logo for movie ${id}:`, error);
       return null;

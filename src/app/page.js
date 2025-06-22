@@ -1,9 +1,20 @@
+"use client"
 import GradientText from "@/components/effects/gradientText";
 import RotatingText from "@/components/effects/RotateText";
+import EmblaCarousel from "@/components/Main/carousel/EmblaCarousel";
 import TrendingCarousel from "@/components/Main/trending/Carousel";
-import React from "react";
+import { fetchTopRatedMovies } from "@/redux/topRatedSlice";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
-const page = () => {
+const Page = () => {
+  const {movies } = useSelector(state => state.topmovies)
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchTopRatedMovies())
+  }, [dispatch])
+
   return (
     <div>
       <div>
@@ -17,9 +28,10 @@ const page = () => {
             />
           </div>
         </div>
+        <EmblaCarousel content={movies} options={{align: 'start'}}/>
       </div>
     </div>
   );
 };
 
-export default page;
+export default Page;

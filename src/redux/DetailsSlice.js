@@ -2,7 +2,7 @@ import {createAsyncThunk, createSlice} from '@reduxjs/toolkit'
 import axios from 'axios'
 
 export const fetchDetails = createAsyncThunk('fetch/detailsMovie', async (movieId) => {
-    const response = await axios.get(`${process.env.BASE_URL}/movie/${movieId}?language=en-US&api_key=${process.env.TMDB_API}`);
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/movie/${movieId}?language=en-US&api_key=${process.env.NEXT_PUBLIC_TMDB_API}`);
     return response.data;
 })
 

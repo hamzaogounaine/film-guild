@@ -23,7 +23,7 @@ const MobileMenu = () => {
             return <Link key={index} href={el.href} className={`flex-1 transition-all duration-300 ${isActive ? 'bg-foreground text-background rounded-lg shadow-lg transform scale-105' : 'hover:scale-95'}`}>
               <div className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 py-1 sm:py-2 w-full justify-center">
                 <div className="flex-shrink-0">
-                  {React.cloneElement(el.icon, { size: window.innerWidth < 640 ? 20 : 24 })}
+                  {React.cloneElement(el.icon, { size: typeof window !== 'undefined' && window.innerWidth < 640 ? 20 : 24 })}
                 </div>
                 <span className={`text-xs sm:text-sm md:text-base lg:text-lg ${navItems.length > 3 ? 'text-xs sm:text-sm' : ''} ${isActive ? 'font-bold' : ''} text-center leading-tight`}>
                   {el.label}
