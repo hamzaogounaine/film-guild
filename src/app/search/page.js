@@ -84,7 +84,7 @@ const SearchPage = () => {
         })
       }
     }
-  }, [debouncedSearchQuery, dispatch])
+  }, [debouncedSearchQuery, dispatch, recentSearches])
 
   const clearSearch = () => {
     setSearchQuery("")
