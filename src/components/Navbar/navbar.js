@@ -1,10 +1,23 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Clapperboard, HomeIcon, MagnetIcon, Menu, Moon, MoveIcon, Search, Sun, Tv2Icon, TvIcon, X } from "lucide-react";
+import {
+  Clapperboard,
+  HomeIcon,
+  MagnetIcon,
+  Menu,
+  Moon,
+  MoveIcon,
+  Search,
+  Sun,
+  Tv2Icon,
+  TvIcon,
+  X,
+} from "lucide-react";
 import { Button } from "../ui/button";
 import { useDispatch, useSelector } from "react-redux";
 import FuzzyText from "../effects/fuzzyText";
+import Link from "next/link";
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -25,7 +38,6 @@ export function Navbar() {
     { name: "Movies", href: "#about", icon: <Clapperboard size={20} /> },
     { name: "TV Shows", href: "#services", icon: <Tv2Icon size={20} /> },
   ];
-  
 
   return (
     <nav
@@ -42,12 +54,12 @@ export function Navbar() {
                 isScrolled ? "text-foreground" : "text-foreground"
               }`}
             >
-              <FuzzyText baseIntensity={0.05} 
-  hoverIntensity={0.2} 
-  enableHover={true}
->
-
-              Film Guild
+              <FuzzyText
+                baseIntensity={0.05}
+                hoverIntensity={0.2}
+                enableHover={true}
+              >
+                Film Guild
               </FuzzyText>
             </a>
           </div>
@@ -60,7 +72,9 @@ export function Navbar() {
                   key={item.name}
                   href={item.href}
                   className={`flex gap-2 px-3 py-2 text-sm font-medium transition-colors duration-300 hover:text-primary ${
-                    isScrolled ? "text-foreground hover:text-primary" : "text-foreground hover:text-primary"
+                    isScrolled
+                      ? "text-foreground hover:text-primary"
+                      : "text-foreground hover:text-primary"
                   }`}
                 >
                   {item.icon}
@@ -73,36 +87,33 @@ export function Navbar() {
           {/* Desktop CTA Button */}
           <div className="hidden md:flex gap-3 justify-center">
             <Button
-              variant={isScrolled ? "default" : "outline"}
-              className={`transition-all duration-300 ${
-                isScrolled
-                  ? "bg-primary hover:bg-primary/90 text-foreground"
-                  : "border-foreground text-foreground hover:bg-foreground hover:text-primary"
-              }`}
+              variant={"outline"}
+              className={`transition-all duration-300 
+                  border-foreground text-foreground hover:bg-foreground hover:text-primary cursor-pointer
+              `}
             >
               Watch List
             </Button>
-            {/* <Button onClick={() => dispatch(toggleTheme())}>
-              {theme === "light" ? <Moon /> : <Sun />}
-            </Button> */}
+            <Button className={'cursor-pointer'} variant={"outline"}>
+              <Link href={"/search"}>
+                <Search />
+              </Link>
+            </Button>
           </div>
-       <div className="md:hidden flex items-center gap-3">
-              {/* <Button variant={isScrolled ? "default" : "outline"}  className={`transition-all duration-300 ${
+          <div className="md:hidden flex items-center gap-3">
+            {/* <Button variant={isScrolled ? "default" : "outline"}  className={`transition-all duration-300 ${
                 isScrolled
                   ? "bg-foreground hover:bg-foreground/90 text-background"
                   : "border-foreground text-foreground hover:bg-foreground hover:text-primary"
               }`}>
                 <Search />
               </Button> */}
-              {/* <Button onClick={() => dispatch(toggleTheme())}>
+            {/* <Button onClick={() => dispatch(toggleTheme())}>
                 {theme === "light" ? <Moon /> : <Sun />}
               </Button> */}
-       </div>
+          </div>
         </div>
       </div>
-          
-
-     
     </nav>
   );
 }
