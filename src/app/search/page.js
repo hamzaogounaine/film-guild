@@ -160,10 +160,10 @@ const SearchPage = () => {
             <div className="mt-4 text-sm text-gray-400">
               {totalResults > 0 ? (
                 <span>
-                  Found {totalResults} result{totalResults !== 1 ? "s" : ""} for "{searchQuery}"
+                  Found {totalResults} result{totalResults !== 1 ? "s" : ""} for &quot;{searchQuery}&quot;
                 </span>
               ) : (
-                <span>No results found for "{searchQuery}"</span>
+                <span>No results found for &quot;{searchQuery}&quot;</span>
               )}
             </div>
           )}

@@ -106,9 +106,9 @@ const Page = () => {
                   {movieDetails.title}
                 </h1>
                 {movieDetails.tagline && (
-                  <p className="text-sm sm:text-lg lg:text-xl text-gray-300 italic mb-2 sm:mb-4">
-                    "{movieDetails.tagline}"
-                  </p>
+                 <p className="text-sm sm:text-lg lg:text-xl text-gray-300 italic mb-2 sm:mb-4">
+                 &quot;{movieDetails?.tagline || 'No tagline available'}&quot;
+               </p>
                 )}
                 <div className="flex items-center justify-center lg:justify-start gap-2 sm:gap-4 text-xs sm:text-sm lg:text-base text-gray-300 flex-wrap">
                   <span>{releaseYear}</span>
