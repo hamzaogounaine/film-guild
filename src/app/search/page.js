@@ -246,7 +246,7 @@ const SearchPage = () => {
                   key={`${item.id}-${item.media_type}`}
                   className="bg-gray-800 border-gray-700 hover:bg-gray-750 transition-colors cursor-pointer group p-1"
                 >
-                    <Link href={`/watch/${item.media_type}/${item.id}`} className="block h-full">
+                    <Link href={`/${item.media_type}/${item.id}`} className="block h-full">
                   <CardContent className="p-0">
                     {/* Poster */}
                     <div className="relative aspect-[2/3] overflow-hidden rounded-t-lg">
