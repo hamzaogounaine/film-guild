@@ -50,17 +50,12 @@ export function Navbar() {
           <div className="flex-shrink-0">
             <a
               href="#home"
-              className={`logo text-2xl transition-colors duration-300 ${
+              className={`logo text-3xl font-bold transition-colors duration-300 ${
                 isScrolled ? "text-foreground" : "text-foreground"
               }`}
             >
-              <FuzzyText
-                baseIntensity={0.05}
-                hoverIntensity={0.2}
-                enableHover={true}
-              >
-                Film Guild
-              </FuzzyText>
+              
+                Film <span className="text-red-500">Guild</span>
             </a>
           </div>
 
