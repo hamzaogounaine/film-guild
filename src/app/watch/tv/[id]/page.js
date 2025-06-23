@@ -17,7 +17,7 @@ import {
   List,
   Grid3X3,
 } from "lucide-react"
-import { useParams, useRouter } from "next/navigation"
+import { useParams } from "next/navigation"
 import axios from "axios"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -26,8 +26,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import Image from "next/image"
 
 const Page = () => {
-  const router = useRouter()
-
   const servers = [
     {
       id: 1,
@@ -91,18 +89,18 @@ const Page = () => {
     },
   ]
 
-  const { id, season: urlSeason, episode: urlEpisode } = useParams()
-
   const [tvShow, setTvShow] = useState({})
   const [selectedServer, setSelectedServer] = useState(servers[0])
-  const [selectedSeason, setSelectedSeason] = useState(urlSeason ? Number.parseInt(urlSeason) : 1)
-  const [selectedEpisode, setSelectedEpisode] = useState(urlEpisode ? Number.parseInt(urlEpisode) : 1)
+  const [selectedSeason, setSelectedSeason] = useState(1)
+  const [selectedEpisode, setSelectedEpisode] = useState(1)
   const [episodes, setEpisodes] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [isEpisodesLoading, setIsEpisodesLoading] = useState(false)
   const [isLiked, setIsLiked] = useState(false)
   const [isServerSwitching, setIsServerSwitching] = useState(false)
   const [episodeViewMode, setEpisodeViewMode] = useState("list") // "list" or "grid"
+
+  const { id } = useParams()
 
   useEffect(() => {
     const fetchTVShowData = async () => {
@@ -137,14 +135,7 @@ const Page = () => {
           `${process.env.NEXT_PUBLIC_BASE_URL}/tv/${id}/season/${selectedSeason}?api_key=${process.env.NEXT_PUBLIC_TMDB_API}`,
         )
         setEpisodes(res.data.episodes || [])
-
-        // If we have URL episode param and it's valid, use it
-        if (urlEpisode && res.data.episodes?.find((ep) => ep.episode_number === Number.parseInt(urlEpisode))) {
-          setSelectedEpisode(Number.parseInt(urlEpisode))
-        } else if (!urlEpisode) {
-          setSelectedEpisode(1) // Reset to first episode when season changes
-          updateURL(selectedSeason, 1)
-        }
+        setSelectedEpisode(1) // Reset to first episode when season changes
       } catch (error) {
         console.error("Error fetching episodes:", error)
         setEpisodes([])
@@ -154,10 +145,6 @@ const Page = () => {
     }
     fetchEpisodes()
   }, [selectedSeason, id])
-
-  const updateURL = (season, episode) => {
-    router.push(`/watch/tv/${id}/${season}/${episode}`, { scroll: false })
-  }
 
   const handleServerChange = (server) => {
     if (server.status === "online") {
@@ -171,29 +158,18 @@ const Page = () => {
 
   const handleEpisodeChange = (episodeNumber) => {
     setSelectedEpisode(episodeNumber)
-    updateURL(selectedSeason, episodeNumber)
-  }
-
-  const handleSeasonChange = (seasonNumber) => {
-    setSelectedSeason(seasonNumber)
-    setSelectedEpisode(1) // Reset to first episode
-    updateURL(seasonNumber, 1)
   }
 
   const handleNextEpisode = () => {
     const currentEpisodeIndex = episodes.findIndex((ep) => ep.episode_number === selectedEpisode)
     if (currentEpisodeIndex < episodes.length - 1) {
-      const nextEpisode = episodes[currentEpisodeIndex + 1].episode_number
-      setSelectedEpisode(nextEpisode)
-      updateURL(selectedSeason, nextEpisode)
+      setSelectedEpisode(episodes[currentEpisodeIndex + 1].episode_number)
     } else {
       // Move to next season if available
       const currentSeasonIndex = tvShow.seasons?.findIndex((season) => season.season_number === selectedSeason)
       const nextSeason = tvShow.seasons?.[currentSeasonIndex + 1]
       if (nextSeason && nextSeason.season_number > 0) {
         setSelectedSeason(nextSeason.season_number)
-        setSelectedEpisode(1)
-        updateURL(nextSeason.season_number, 1)
       }
     }
   }
@@ -201,18 +177,13 @@ const Page = () => {
   const handlePreviousEpisode = () => {
     const currentEpisodeIndex = episodes.findIndex((ep) => ep.episode_number === selectedEpisode)
     if (currentEpisodeIndex > 0) {
-      const prevEpisode = episodes[currentEpisodeIndex - 1].episode_number
-      setSelectedEpisode(prevEpisode)
-      updateURL(selectedSeason, prevEpisode)
+      setSelectedEpisode(episodes[currentEpisodeIndex - 1].episode_number)
     } else {
       // Move to previous season if available
       const currentSeasonIndex = tvShow.seasons?.findIndex((season) => season.season_number === selectedSeason)
       const prevSeason = tvShow.seasons?.[currentSeasonIndex - 1]
       if (prevSeason && prevSeason.season_number > 0) {
         setSelectedSeason(prevSeason.season_number)
-        // Set to last episode of previous season (will be updated when episodes load)
-        setSelectedEpisode(prevSeason.episode_count || 1)
-        updateURL(prevSeason.season_number, prevSeason.episode_count || 1)
       }
     }
   }
@@ -479,7 +450,7 @@ const Page = () => {
                       <label className="block text-sm font-medium text-gray-400 mb-2">Season</label>
                       <Select
                         value={selectedSeason.toString()}
-                        onValueChange={(value) => handleSeasonChange(Number.parseInt(value))}
+                        onValueChange={(value) => setSelectedSeason(Number.parseInt(value))}
                       >
                         <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
                           <SelectValue />
@@ -508,72 +479,68 @@ const Page = () => {
                     </div>
                   ) : (
                     <div className={episodeViewMode === "grid" ? "grid grid-cols-1 md:grid-cols-2 gap-4" : "space-y-3"}>
-                      {episodes.map((episode) => (
-                        <div
-                          key={episode.id}
-                          className={`p-4 rounded-lg border cursor-pointer transition-all duration-300 hover:scale-[1.02] ${
-                            selectedEpisode === episode.episode_number
-                              ? "border-red-500 bg-red-500/10 shadow-lg shadow-red-500/20"
-                              : "border-gray-600 hover:border-gray-500 bg-gray-700/30"
-                          }`}
-                          onClick={() => handleEpisodeChange(episode.episode_number)}
-                        >
-                          <div className="flex gap-4">
-                            {/* Episode Thumbnail - Always show */}
-                            <div className="flex-shrink-0">
-                              <Image
-                                width={episodeViewMode === "grid" ? 200 : 120}
-                                height={episodeViewMode === "grid" ? 113 : 68}
-                                src={
-                                  episode.still_path
-                                    ? `https://image.tmdb.org/t/p/w300${episode.still_path}`
-                                    : "/placeholder.svg?height=113&width=200"
-                                }
-                                alt={episode.name}
-                                className={`${
-                                  episodeViewMode === "grid" ? "w-32 h-18" : "w-20 h-12"
-                                } object-cover rounded flex-shrink-0 bg-gray-700`}
-                                onError={(e) => {
-                                  e.target.src = "/placeholder.svg?height=113&width=200"
-                                }}
-                              />
-                              {/* Episode Number Overlay */}
-                              <div className="relative -mt-6 ml-2">
-                                <div className="bg-black/80 text-white text-xs px-2 py-1 rounded">
-                                  E{episode.episode_number}
-                                </div>
-                              </div>
-                            </div>
+                    {episodes.map((episode) => (
+                      <div
+                        key={episode.id}
+                        className={`p-4 rounded-lg border cursor-pointer transition-all duration-300 hover:scale-[1.02] ${
+                          selectedEpisode === episode.episode_number
+                            ? "border-red-500 bg-red-500/10 shadow-lg shadow-red-500/20"
+                            : "border-gray-600 hover:border-gray-500 bg-gray-700/30"
+                        }`}
+                        onClick={() => handleEpisodeChange(episode.episode_number)}
+                      >
+                        <div className="flex gap-4">
+                          {/* Episode Thumbnail - Always show */}
+                          <div className="flex-shrink-0">
+                            <Image
+                              width={episodeViewMode === "grid" ? 200 : 120}
+                              height={episodeViewMode === "grid" ? 113 : 68}
+                              src={
+                                episode.still_path
+                                  ? `https://image.tmdb.org/t/p/w300${episode.still_path}`
+                                  : "/placeholder.svg?height=113&width=200"
+                              }
+                              alt={episode.name}
+                              className={`${
+                                episodeViewMode === "grid" ? "w-32 h-18" : "w-20 h-12"
+                              } object-cover rounded flex-shrink-0 bg-gray-700`}
+                              onError={(e) => {
+                                e.target.src = "/placeholder.svg?height=113&width=200"
+                              }}
+                            />
+                            {/* Episode Number Overlay */}
+                           
+                          </div>
 
-                            <div className="flex-1 min-w-0">
-                              <div className="flex items-center gap-2 mb-1">
-                                <span className="font-semibold text-sm">Episode {episode.episode_number}</span>
-                                {episode.vote_average > 0 && (
-                                  <div className="flex items-center gap-1">
-                                    <Star className="w-3 h-3 text-yellow-400 fill-current" />
-                                    <span className="text-xs text-gray-400">{episode.vote_average.toFixed(1)}</span>
-                                  </div>
-                                )}
-                                {/* Runtime Badge */}
-                                {episode.runtime && (
-                                  <Badge variant="outline" className="text-xs border-gray-600 text-gray-400">
-                                    {formatRuntime(episode.runtime)}
-                                  </Badge>
-                                )}
-                              </div>
-                              <h4 className="font-medium text-white mb-1 line-clamp-1">{episode.name}</h4>
-                              <p className="text-gray-400 text-xs line-clamp-2 leading-relaxed">
-                                {episode.overview || "No description available."}
-                              </p>
-                              <div className="flex items-center gap-4 mt-2 text-xs text-gray-500">
-                                {episode.air_date && <span>Aired: {formatDate(episode.air_date)}</span>}
-                                {episode.vote_count > 0 && <span>{episode.vote_count} votes</span>}
-                              </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2 mb-1">
+                              <span className="font-semibold text-sm">Episode {episode.episode_number}</span>
+                              {episode.vote_average > 0 && (
+                                <div className="flex items-center gap-1">
+                                  <Star className="w-3 h-3 text-yellow-400 fill-current" />
+                                  <span className="text-xs text-gray-400">{episode.vote_average.toFixed(1)}</span>
+                                </div>
+                              )}
+                              {/* Runtime Badge */}
+                              {episode.runtime && (
+                                <Badge variant="outline" className="text-xs border-gray-600 text-gray-400">
+                                  {formatRuntime(episode.runtime)}
+                                </Badge>
+                              )}
+                            </div>
+                            <h4 className="font-medium text-white mb-1 line-clamp-1">{episode.name}</h4>
+                            <p className="text-gray-400 text-xs line-clamp-2 leading-relaxed">
+                              {episode.overview || "No description available."}
+                            </p>
+                            <div className="flex items-center gap-4 mt-2 text-xs text-gray-500">
+                              {episode.air_date && <span>Aired: {formatDate(episode.air_date)}</span>}
+                              {episode.vote_count > 0 && <span>{episode.vote_count} votes</span>}
                             </div>
                           </div>
                         </div>
-                      ))}
-                    </div>
+                      </div>
+                    ))}
+                  </div>
                   )}
                 </CardContent>
               </Card>
