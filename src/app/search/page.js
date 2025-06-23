@@ -70,9 +70,9 @@ const SearchPage = () => {
   const { results, status, error } = useSelector((state) => state.search);
   const dispatch = useDispatch();
 
-  // Load recent searches from sessionStorage on client-side mount
+  // Load recent searches from localStorage on client-side mount
   useEffect(() => {
-    const storedSearches = sessionStorage.getItem('recentSearches');
+    const storedSearches = localStorage.getItem('recentSearches');
     if (storedSearches) {
       setRecentSearches(JSON.parse(storedSearches));
     }
@@ -85,7 +85,7 @@ const SearchPage = () => {
       if (!recentSearches.includes(debouncedSearchQuery)) {
         setRecentSearches((prevSearches) => {
           const updatedSearches = [debouncedSearchQuery, ...prevSearches.slice(0, 4)];
-          sessionStorage.setItem('recentSearches', JSON.stringify(updatedSearches));
+          localStorage.setItem('recentSearches', JSON.stringify(updatedSearches));
           return updatedSearches;
         });
       }
