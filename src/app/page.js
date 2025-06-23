@@ -2,6 +2,7 @@
 import GradientText from "@/components/effects/gradientText";
 import RotatingText from "@/components/effects/RotateText";
 import MovieCardSkeleton from "@/components/Main/carousel/cardSkeleton";
+import CardSkeleton from "@/components/Main/carousel/cardSkeleton";
 import MovieCarousel from "@/components/Main/carousel/Carousel";
 import TrendingCarousel from "@/components/Main/trending/Carousel";
 import { fetchTopRatedMovies } from "@/redux/topRatedSlice";
@@ -36,9 +37,7 @@ const Page = () => {
           </div> */}
         <MovieCarousel items={movies} title="Top rated movies"/>
         <MovieCarousel items={tvShows} title="Top rated tv shows"  tv={true}/>
-        <div className="grid grid-cols-2 lg:grid-cols-6 gap-4">
-        
-    </div>
+       
         </div>
       </div>
     </div>

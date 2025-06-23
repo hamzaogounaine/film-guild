@@ -5,6 +5,7 @@ import { ChevronLeft, ChevronRight, LayoutGrid } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import MovieCard from "./cardContent"
+import MovieCardSkeleton from "./cardSkeleton"
 
 const MovieCarousel = ({
 title = "Movie Collection",
@@ -180,6 +181,7 @@ return (
           }}
         >
           {/* Render children or items */}
+         
           {children
             ? React.Children.map(children, (child, index) => (
                 <div
@@ -212,12 +214,25 @@ return (
 
       {/* Empty State */}
       {totalItems === 0 && (
-        <div className="flex items-center justify-center h-64 bg-gray-800/50 rounded-lg border-2 border-dashed border-gray-600">
-          <div className="text-center">
-            <LayoutGrid className="w-12 h-12 text-gray-500 mx-auto mb-4" />
-            <h3 className="text-lg font-semibold text-gray-400 mb-2">No Items to Display</h3>
-            <p className="text-gray-500 text-sm">Add some items to see them in the carousel</p>
-          </div>
+        <div 
+        
+        
+        className="flex gap-4 overflow-x-auto overflow-y-hidden scrollbar-thin scrollbar-track-gray-800 scrollbar-thumb-gray-600 hover:scrollbar-thumb-gray-500"
+        >
+          {!items.length && !children && (Array.from({ length: 10 }).map((_, index) => (
+            <div
+            key={index}
+            className="flex-shrink-0"
+            style={{
+              width: `calc((100vw - 2rem) / ${itemsPerView} - 1rem)`,
+              maxWidth: `calc((1280px - 2rem) / ${itemsPerView} - 1rem)`,
+              scrollSnapAlign: "start",
+            }}
+          >
+            <MovieCardSkeleton />
+            </div>
+          )))}
+         
         </div>
       )}
     </div>

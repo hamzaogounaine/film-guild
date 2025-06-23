@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import CarouselCard from "./CarouselCard";
 import { fetchTrending } from "@/redux/trendingSlice";
+import CarouselCardSkeleton from "./CarouselSkeleton";
 export default function TrendingCarousel() {
   const plugin = React.useRef(Autoplay({ delay: 4000, stopOnInteraction: true }));
   const dispatch = useDispatch();
@@ -56,6 +57,10 @@ export default function TrendingCarousel() {
       loadLogos();
     }
   }, [status, trending]);
+
+  if(!trending.length) {
+    return <CarouselCardSkeleton />
+  }
 
   return (
     <Carousel plugins={[plugin.current]} className="w-full">
