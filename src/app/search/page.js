@@ -246,14 +246,14 @@ const SearchPage = () => {
                   key={`${item.id}-${item.media_type}`}
                   className="bg-gray-800 border-gray-700 hover:bg-gray-750 transition-colors cursor-pointer group p-1"
                 >
-                    <Link href={`/${item.media_type}/${item.id}`} className="block h-full">
+                    <Link href={`/watch/${item.media_type}/${item.id}`} className="block h-full">
                   <CardContent className="p-0">
                     {/* Poster */}
                     <div className="relative aspect-[2/3] overflow-hidden rounded-t-lg">
                       <Image
                         width={300}
                         height={450}
-                        src={backdropUrl + item.poster_path || "/placeholder.svg?height=450&width=300"}
+                        src={process.env.NEXT_PUBLIC_IMAGE_URL + item.poster_path || "/placeholder.svg?height=450&width=300"}
                         alt={getTitle(item)}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                         onError={(e) => {

@@ -31,7 +31,7 @@ const CarouselCard = ({ movie, logoUrl }) => {
         <p className="max-md:text-sm text-lg">{movie.overview.slice(0, 200)}...</p>
         <div className="flex gap-2">
           <Button size={'lg'}>
-            <Link href={`/,/${movie.id}`} >
+            <Link href={`/watch/movie/${movie.id}`} >
             Watch
             </Link>
           </Button>
