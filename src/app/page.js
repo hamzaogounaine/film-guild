@@ -36,6 +36,8 @@ const Page = () => {
             />
           </div> */}
         <MovieCarousel items={movies} title="Top rated movies"/>
+        {/* <script async="async" data-cfasync="false" src="//pl27003266.profitableratecpm.com/3212e516f6d6fe8f8af9c77aeb4506d0/invoke.js"></script>
+<div id="container-3212e516f6d6fe8f8af9c77aeb4506d0"></div> */}
         <MovieCarousel items={tvShows} title="Top rated tv shows"  tv={true}/>
        
         </div>

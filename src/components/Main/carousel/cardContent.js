@@ -109,10 +109,10 @@ const MovieCard = ({ movie, size = "medium", showOverlay = true, onClick , tv=fa
 
   return (
     <div
-      className={`${config.container} bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer group relative border border-gray-700 hover:border-gray-600`}
+      className={`${config.container} bg-gray-800 rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer group relative border border-gray-700 hover:border-gray-600`}
       onClick={handleCardClick}
     >
-      <Link href={`/watch/${mediaType}/${movie.id}`} className="block h-full">
+      <Link href={`/${mediaType}/${movie.id}`} className="block h-full">
         {/* Poster Image */}
         <div
           className={`relative ${config.poster} overflow-hidden bg-gray-700`}
@@ -172,13 +172,14 @@ const MovieCard = ({ movie, size = "medium", showOverlay = true, onClick , tv=fa
           {/* Hover Overlay with Actions */}
           {showOverlay && (
             <div className="absolute inset-0 bg-black/60 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col justify-center items-center gap-3">
+              <Link href={`/watch/${mediaType}/${movie.id}`}>
               <Button
                 size="sm"
                 className="bg-red-600 hover:bg-red-700 text-white rounded-full w-12 h-12 p-0 transform scale-0 group-hover:scale-100 transition-transform duration-300 delay-100"
               >
                 <Play className="w-5 h-5 fill-current" />
               </Button>
-
+            </Link>
               <div className="flex gap-2 transform translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300 delay-200">
                 <Button
                   size="sm"
@@ -253,14 +254,6 @@ const MovieCard = ({ movie, size = "medium", showOverlay = true, onClick , tv=fa
                   {genreMap[genreId] || "Unknown"}
                 </Badge>
               ))}
-              {movie.genre_ids.length > 2 && (
-                <Badge
-                  variant="secondary"
-                  className="bg-gray-700 text-gray-300 text-xs px-2 py-0.5"
-                >
-                  +{movie.genre_ids.length - 2}
-                </Badge>
-              )}
             </div>
           )}
 
@@ -271,19 +264,6 @@ const MovieCard = ({ movie, size = "medium", showOverlay = true, onClick , tv=fa
             {movie.overview || "No description available."}
           </p>
 
-          {/* Additional Info */}
-          <div className="flex items-center justify-between pt-1">
-            {movie.vote_count && (
-              <span className="text-xs text-gray-500">
-                {movie.vote_count.toLocaleString()} votes
-              </span>
-            )}
-            {movie.popularity && (
-              <span className="text-xs text-gray-500">
-                Pop: {Math.round(movie.popularity)}
-              </span>
-            )}
-          </div>
         </div>
 
         {/* Shine Effect */}

@@ -16,12 +16,14 @@ import {
 } from "lucide-react";
 import { Button } from "../ui/button";
 import { useDispatch, useSelector } from "react-redux";
-import FuzzyText from "../effects/fuzzyText";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const path = usePathname()
+  
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -48,15 +50,15 @@ export function Navbar() {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex-shrink-0">
-            <a
-              href="#home"
+            <Link
+              href={"/"}
               className={`logo text-3xl font-bold transition-colors duration-300 ${
                 isScrolled ? "text-foreground" : "text-foreground"
               }`}
             >
               
                 Film <span className="text-red-500">Guild</span>
-            </a>
+            </Link>
           </div>
 
           {/* Desktop Navigation */}
@@ -66,11 +68,9 @@ export function Navbar() {
                 <a
                   key={item.name}
                   href={item.href}
-                  className={`flex gap-2 px-3 py-2 text-sm font-medium transition-colors duration-300 hover:text-primary ${
-                    isScrolled
-                      ? "text-foreground hover:text-primary"
-                      : "text-foreground hover:text-primary"
-                  }`}
+                  className={`flex gap-2 px-3 py-2 text-sm font-medium transition-colors duration-300 hover:text-primary 
+                    text-foreground rounded-lg ${item.href === path ? 'bg-foreground/10 text-primary' : ''}
+                  `}
                 >
                   {item.icon}
                   {item.name}

@@ -9,6 +9,7 @@ export default function RootLayout({children}) {
   return (
     <html lang="en">
       <link precedence="default" href="https://api.fontshare.com/v2/css?f[]=satoshi@500,700&display=swap" rel="stylesheet" />
+      
       <body>
 
     <Provider store={store}>

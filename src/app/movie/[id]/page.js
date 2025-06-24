@@ -88,7 +88,7 @@ const Page = () => {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/60 to-transparent" />
         <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6 lg:p-8">
-          <div className="max-w-7xl  flex flex-col lg:flex-row gap-4 sm:gap-6 lg:gap-8">
+          <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-4 sm:gap-6 lg:gap-8">
             {/* Movie Poster */}
             <div className="flex-shrink-0 flex justify-center lg:justify-start">
               <Image
