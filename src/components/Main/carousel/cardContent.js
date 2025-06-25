@@ -38,7 +38,7 @@ const genreMap = {
   10768: "War & Politics",
 };
 
-const MovieCard = ({ movie, size = "medium", showOverlay = true, onClick , tv=false}) => {
+const MovieCard = ({ movie, size = "responsive", showOverlay = true, onClick , tv=false}) => {
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
 
@@ -82,26 +82,12 @@ const MovieCard = ({ movie, size = "medium", showOverlay = true, onClick , tv=fa
   }
 
   const sizeConfig = {
-    small: {
-      container: "",
+    responsive: {
+      container: "h-[26rem] sm:h-[30rem] md:h-[28rem] lg:h-[32rem] xl:h-[37rem]",
       poster: "",
-      title: "text-sm",
-      text: "text-xs",
-      padding: "p-3",
-    },
-    medium: {
-      container: "",
-      poster: "",
-      title: "text-base",
-      text: "text-sm",
-      padding: "p-4",
-    },
-    large: {
-      container: "h-32",
-      poster: "",
-      title: "text-lg",
-      text: "text-sm",
-      padding: "p-4",
+      title: "text-xs sm:text-sm md:text-base lg:text-lg",
+      text: "text-xs sm:text-xs md:text-sm",
+      padding: "p-2 sm:p-3 md:p-4",
     },
   };
 
@@ -135,10 +121,10 @@ const MovieCard = ({ movie, size = "medium", showOverlay = true, onClick , tv=fa
           ) : (
             <div className="w-full h-full bg-gray-700 flex items-center justify-center">
               <div className="text-center">
-                <div className="w-16 h-16 bg-gray-600 rounded-lg flex items-center justify-center mb-2 mx-auto">
-                  <span className="text-white font-bold">{movie.id}</span>
+                <div className="w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 bg-gray-600 rounded-lg flex items-center justify-center mb-2 mx-auto">
+                  <span className="text-white font-bold text-xs sm:text-sm md:text-base">{movie.id}</span>
                 </div>
-                <div className="text-white font-semibold text-sm px-2">
+                <div className="text-white font-semibold text-xs sm:text-sm px-2">
                   {title}
                 </div>
               </div>
@@ -148,7 +134,7 @@ const MovieCard = ({ movie, size = "medium", showOverlay = true, onClick , tv=fa
           {/* Loading skeleton */}
           {posterUrl && !imageLoaded && (
             <div className="absolute inset-0 bg-gray-700 animate-pulse flex items-center justify-center">
-              <div className="w-16 h-16 bg-gray-600 rounded-lg"></div>
+              <div className="w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 bg-gray-600 rounded-lg"></div>
             </div>
           )}
 
@@ -156,39 +142,39 @@ const MovieCard = ({ movie, size = "medium", showOverlay = true, onClick , tv=fa
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
           {/* Rating Badge */}
-          <div className="absolute top-3 right-3 bg-black/70 backdrop-blur-sm rounded-full px-2 py-1 flex items-center gap-1 transform translate-y-0 group-hover:-translate-y-1 transition-transform duration-300">
-            <Star className="w-3 h-3 text-yellow-400 fill-current" />
+          <div className="absolute top-1 right-1 sm:top-2 sm:right-2 md:top-3 md:right-3 bg-black/70 backdrop-blur-sm rounded-full px-1 py-0.5 sm:px-2 sm:py-1 flex items-center gap-1 transform translate-y-0 group-hover:-translate-y-1 transition-transform duration-300">
+            <Star className="w-2 h-2 sm:w-3 sm:h-3 text-yellow-400 fill-current" />
             <span className="text-xs font-semibold text-white">
               {movie.vote_average?.toFixed(1) || "N/A"}
             </span>
           </div>
 
           {/* Media Type Badge */}
-          <div className="absolute top-2 left-2 bg-black/70 rounded-full px-2 py-1 flex items-center gap-1">
-                        {getMediaTypeIcon(mediaType)}
-                        <span className="text-xs font-semibold">{getMediaTypeLabel(mediaType)}</span>
-                      </div>
+          <div className="absolute top-1 left-1 sm:top-2 sm:left-2 bg-black/70 rounded-full px-1 py-0.5 sm:px-2 sm:py-1 flex items-center gap-1">
+            {getMediaTypeIcon(mediaType)}
+            <span className="text-xs font-semibold">{getMediaTypeLabel(mediaType)}</span>
+          </div>
 
           {/* Hover Overlay with Actions */}
           {showOverlay && (
-            <div className="absolute inset-0 bg-black/60 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col justify-center items-center gap-3">
+            <div className="absolute inset-0 bg-black/60 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col justify-center items-center gap-2 md:gap-3">
               <Link href={`/watch/${mediaType}/${movie.id}`}>
               <Button
                 size="sm"
-                className="bg-red-600 hover:bg-red-700 text-white rounded-full w-12 h-12 p-0 transform scale-0 group-hover:scale-100 transition-transform duration-300 delay-100"
+                className="bg-red-600 hover:bg-red-700 text-white rounded-full w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 p-0 transform scale-0 group-hover:scale-100 transition-transform duration-300 delay-100"
               >
-                <Play className="w-5 h-5 fill-current" />
+                <Play className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 fill-current" />
               </Button>
             </Link>
-              <div className="flex gap-2 transform translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300 delay-200">
+              <div className="flex gap-1 sm:gap-2 transform translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300 delay-200">
                 <Button
                   size="sm"
                   variant="outline"
-                  className="bg-white/20 border-white/30 text-white hover:bg-white/30 rounded-full w-10 h-10 p-0"
+                  className="bg-white/20 border-white/30 text-white hover:bg-white/30 rounded-full w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 p-0"
                   onClick={handleWishlistToggle}
                 >
                   <Heart
-                    className={`w-4 h-4 ${
+                    className={`w-3 h-3 sm:w-4 sm:h-4 ${
                       isWishlisted ? "fill-current text-red-400" : ""
                     }`}
                   />
@@ -197,9 +183,9 @@ const MovieCard = ({ movie, size = "medium", showOverlay = true, onClick , tv=fa
                 <Button
                   size="sm"
                   variant="outline"
-                  className="bg-white/20 border-white/30 text-white hover:bg-white/30 rounded-full w-10 h-10 p-0"
+                  className="bg-white/20 border-white/30 text-white hover:bg-white/30 rounded-full w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 p-0"
                 >
-                  <Info className="w-4 h-4" />
+                  <Info className="w-3 h-3 sm:w-4 sm:h-4" />
                 </Button>
               </div>
             </div>
@@ -207,14 +193,14 @@ const MovieCard = ({ movie, size = "medium", showOverlay = true, onClick , tv=fa
 
           {/* Adult Content Indicator */}
           {movie.adult && (
-            <div className="absolute bottom-3 right-3 bg-red-600 rounded px-2 py-1">
+            <div className="absolute bottom-1 right-1 sm:bottom-2 sm:right-2 md:bottom-3 md:right-3 bg-red-600 rounded px-1 py-0.5 sm:px-2 sm:py-1">
               <span className="text-xs font-bold text-white">18+</span>
             </div>
           )}
         </div>
 
         {/* Movie/TV Show Info */}
-        <div className={`${config.padding} space-y-2 flex-1`}>
+        <div className={`${config.padding} space-y-1 sm:space-y-2 flex-1`}>
           <div>
             <h3
               className={`${config.title} font-bold text-white line-clamp-2 group-hover:text-red-400 transition-colors duration-300`}
@@ -222,9 +208,9 @@ const MovieCard = ({ movie, size = "medium", showOverlay = true, onClick , tv=fa
               {title}
             </h3>
 
-            <div className="flex items-center gap-2 mt-1 flex-wrap">
+            <div className="flex items-center gap-1 sm:gap-2 mt-1 flex-wrap">
               <div className="flex items-center gap-1 text-gray-400">
-                <Calendar className="w-3 h-3" />
+                <Calendar className="w-2 h-2 sm:w-3 sm:h-3" />
                 <span className={`${config.text}`}>{releaseYear}</span>
               </div>
 
@@ -249,7 +235,7 @@ const MovieCard = ({ movie, size = "medium", showOverlay = true, onClick , tv=fa
                 <Badge
                   key={genreId}
                   variant="secondary"
-                  className="bg-gray-700 text-gray-300 text-xs px-2 py-0.5 hover:bg-gray-600 transition-colors"
+                  className="bg-gray-700 text-gray-300 text-xs px-1 py-0.5 sm:px-2 hover:bg-gray-600 transition-colors"
                 >
                   {genreMap[genreId] || "Unknown"}
                 </Badge>
@@ -259,7 +245,7 @@ const MovieCard = ({ movie, size = "medium", showOverlay = true, onClick , tv=fa
 
           {/* Overview */}
           <p
-            className={`${config.text} text-gray-400 line-clamp-2 leading-relaxed`}
+            className={`${config.text} text-gray-400 line-clamp-2 sm:line-clamp-3 md:line-clamp-4 leading-relaxed`}
           >
             {movie.overview || "No description available."}
           </p>

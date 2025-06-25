@@ -8,7 +8,7 @@ const CarouselCard = ({ movie, logoUrl }) => {
   return (
     <div
       style={{ backgroundImage: `url(${process.env.NEXT_PUBLIC_BACKDROP_URL}${movie.backdrop_path})` }}
-      className="bg-cover bg-center max-md:items-end   items-center rounded-lg shadow-lg flex text-white h-screen relative max-md:h-[calc(100vh-4rem)] "
+      className="bg-cover bg-center max-md:items-end items-center rounded-lg shadow-lg flex text-white h-screen relative max-md:h-[calc(100vh-4rem)]"
     >
       <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent rounded-lg"></div>
       <div className="md:w-1/4 gap-3 flex flex-col max-md:ms-6 ms-32 justify-center relative z-10 max-md:mb-16 max-md:w-full max-md:gap-2">
@@ -18,7 +18,7 @@ const CarouselCard = ({ movie, logoUrl }) => {
             height={100}
             src={logoUrl}
             alt={`${movie.title} logo`}
-            className="w-full mb-2 w-1/6 object-contain max-md:w-1/2"
+            className="w-full mb-2  object-contain max-md:w-1/2"
           />
         ) : (
           <p className="text-sm">Logo not available</p>
