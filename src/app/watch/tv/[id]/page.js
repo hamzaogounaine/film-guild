@@ -279,7 +279,7 @@ const Page = () => {
             {/* TV Show Title & Episode Info */}
             <div className="mb-6">
               <div className="flex items-center gap-4 mb-4">
-                <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-white to-black bg-clip-text text-transparent">
+                <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r text-white  bg-clip-text ">
                   {tvShow.name || "Loading..."}
                 </h1>
                 <Badge className="bg-red-600 text-white">TV Show</Badge>
@@ -291,13 +291,13 @@ const Page = () => {
                   <h2 className="text-xl md:text-2xl font-semibold text-gray-200 mb-2">
                     S{selectedSeason}E{selectedEpisode}: {currentEpisode.name}
                   </h2>
-                  <p className="text-black text-sm md:text-base line-clamp-2">
+                  <p className="text-gray-300 text-sm md:text-base line-clamp-2">
                     {currentEpisode.overview || "No description available."}
                   </p>
                 </div>
               )}
 
-              <div className="flex items-center gap-6 text-black mb-4 flex-wrap">
+              <div className="flex items-center gap-6 text-white mb-4 flex-wrap">
                 {tvShow.first_air_date && (
                   <div className="flex items-center gap-1">
                     <Calendar className="w-4 h-4" />
@@ -373,7 +373,7 @@ const Page = () => {
                     <div className="text-center">
                       <div className="w-12 h-12 border-4 border-red-500 border-t-transparent rounded-full animate-spin mx-auto mb-3"></div>
                       <p className="text-lg">Switching to {selectedServer.name}...</p>
-                      <p className="text-sm text-black">
+                      <p className="text-sm text-gray-400">
                         {selectedServer.quality} • {selectedServer.location}
                       </p>
                     </div>
@@ -410,7 +410,7 @@ const Page = () => {
                     <span className="font-semibold">
                       S{selectedSeason}E{selectedEpisode}
                     </span>
-                    {currentEpisode && <span className="ml-2 text-black">{currentEpisode.name}</span>}
+                    {currentEpisode && <span className="ml-2 text-white">{currentEpisode.name}</span>}
                   </div>
                 </div>
               </div>
@@ -447,7 +447,7 @@ const Page = () => {
 
                   <div className="flex gap-4 mb-6">
                     <div className="flex-1">
-                      <label className="block text-sm font-medium text-black mb-2">Season</label>
+                      <label className="block text-sm font-medium text-white mb-2">Season</label>
                       <Select
                         value={selectedSeason.toString()}
                         onValueChange={(value) => setSelectedSeason(Number.parseInt(value))}
@@ -518,21 +518,21 @@ const Page = () => {
                               {episode.vote_average > 0 && (
                                 <div className="flex items-center gap-1">
                                   <Star className="w-3 h-3 text-yellow-400 fill-current" />
-                                  <span className="text-xs text-black">{episode.vote_average.toFixed(1)}</span>
+                                  <span className="text-xs text-white">{episode.vote_average.toFixed(1)}</span>
                                 </div>
                               )}
                               {/* Runtime Badge */}
                               {episode.runtime && (
-                                <Badge variant="outline" className="text-xs border-gray-600 text-black">
+                                <Badge variant="outline" className="text-xs border-gray-600 text-gray-400">
                                   {formatRuntime(episode.runtime)}
                                 </Badge>
                               )}
                             </div>
                             <h4 className="font-medium text-white mb-1 line-clamp-1">{episode.name}</h4>
-                            <p className="text-black text-xs line-clamp-2 leading-relaxed">
+                            <p className="text-gray-400 text-xs line-clamp-2 leading-relaxed">
                               {episode.overview || "No description available."}
                             </p>
-                            <div className="flex items-center gap-4 mt-2 text-xs text-black">
+                            <div className="flex items-center gap-4 mt-2 text-xs text-white">
                               {episode.air_date && <span>Aired: {formatDate(episode.air_date)}</span>}
                               {episode.vote_count > 0 && <span>{episode.vote_count} votes</span>}
                             </div>
@@ -557,19 +557,19 @@ const Page = () => {
                     <div className="text-center p-3 bg-gray-700/30 rounded-lg">
                       <div className="text-2xl mb-1">{selectedServer.flag}</div>
                       <div className="text-sm font-medium">{selectedServer.location}</div>
-                      <div className="text-xs text-black">Location</div>
+                      <div className="text-xs text-gray-300">Location</div>
                     </div>
 
                     <div className="text-center p-3 bg-gray-700/30 rounded-lg">
                       <div className="text-lg font-bold text-blue-400">{selectedServer.quality}</div>
-                      <div className="text-xs text-black">Quality</div>
+                      <div className="text-xs text-gray-300">Quality</div>
                     </div>
 
                     <div className="text-center p-3 bg-gray-700/30 rounded-lg">
                       <div className={`text-lg font-bold ${getPingColor(selectedServer.ping)}`}>
                         {selectedServer.ping}ms
                       </div>
-                      <div className="text-xs text-black">Latency</div>
+                      <div className="text-xs text-gray-300">Latency</div>
                     </div>
 
                     <div className="text-center p-3 bg-gray-700/30 rounded-lg">
@@ -577,7 +577,7 @@ const Page = () => {
                         <Zap className="w-4 h-4 text-yellow-400" />
                         <span className="text-sm font-medium">{selectedServer.speed}</span>
                       </div>
-                      <div className="text-xs text-black">Speed</div>
+                      <div className="text-xs text-gray-300">Speed</div>
                     </div>
                   </div>
                 </CardContent>
@@ -617,7 +617,7 @@ const Page = () => {
                         </div>
 
                         <div className="flex items-center justify-between text-sm">
-                          <div className="flex items-center gap-4 text-black">
+                          <div className="flex items-center gap-4 text-gray-300">
                             <span>{server.quality}</span>
                             <span>•</span>
                             <span>{server.location}</span>
@@ -628,20 +628,20 @@ const Page = () => {
                           </div>
                         </div>
 
-                        <div className="mt-2 text-xs text-black">Speed: {server.speed}</div>
+                        <div className="mt-2 text-xs text-gray-300">Speed: {server.speed}</div>
                       </div>
                     ))}
                   </div>
 
                   {/* Server Statistics */}
                   <div className="mt-6 pt-4 border-t border-gray-600">
-                    <div className="flex items-center justify-between text-sm text-black">
+                    <div className="flex items-center justify-between text-sm text-gray-300">
                       <span>Online Servers:</span>
                       <span className="text-green-400 font-medium">
                         {servers.filter((s) => s.status === "online").length}/{servers.length}
                       </span>
                     </div>
-                    <div className="flex items-center justify-between text-sm text-black mt-1">
+                    <div className="flex items-center justify-between text-sm text-gray-300 mt-1">
                       <span>Best Ping:</span>
                       <span className="text-green-400 font-medium">
                         {Math.min(...servers.filter((s) => s.status === "online").map((s) => s.ping))}ms
@@ -667,18 +667,18 @@ const Page = () => {
                     )}
                     <div className="space-y-2 text-sm">
                       <div className="flex justify-between">
-                        <span className="text-black">Episodes:</span>
+                        <span className="text-white">Episodes:</span>
                         <span>{currentSeason.episode_count}</span>
                       </div>
                       {currentSeason.air_date && (
                         <div className="flex justify-between">
-                          <span className="text-black">Air Date:</span>
+                          <span className="text-white">Air Date:</span>
                           <span>{formatDate(currentSeason.air_date)}</span>
                         </div>
                       )}
                       {currentSeason.vote_average > 0 && (
                         <div className="flex justify-between">
-                          <span className="text-black">Rating:</span>
+                          <span className="text-white">Rating:</span>
                           <span className="flex items-center gap-1">
                             <Star className="w-3 h-3 text-yellow-400 fill-current" />
                             {currentSeason.vote_average.toFixed(1)}
@@ -687,7 +687,7 @@ const Page = () => {
                       )}
                     </div>
                     {currentSeason.overview && (
-                      <p className="text-black text-xs mt-4 leading-relaxed">{currentSeason.overview}</p>
+                      <p className="text-gray-400 text-xs mt-4 leading-relaxed">{currentSeason.overview}</p>
                     )}
                   </CardContent>
                 </Card>

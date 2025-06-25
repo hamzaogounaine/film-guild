@@ -37,8 +37,8 @@ export function Navbar() {
 
   const navItems = [
     { name: "Home", href: "/", icon: <HomeIcon size={20} /> },
-    { name: "Movies", href: "#about", icon: <Clapperboard size={20} /> },
-    { name: "TV Shows", href: "#services", icon: <Tv2Icon size={20} /> },
+    { name: "Movies", href: "/movie", icon: <Clapperboard size={20} /> },
+    { name: "TV Shows", href: "/tv", icon: <Tv2Icon size={20} /> },
   ];
 
   return (

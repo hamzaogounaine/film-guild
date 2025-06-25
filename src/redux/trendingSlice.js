@@ -2,7 +2,7 @@ import {createSlice, createAsyncThunk} from "@reduxjs/toolkit";
 import axios from "axios";
 
 export const fetchTrending = createAsyncThunk('trending/fetchTrending', async () => {
-    const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/trending/movie/day?api_key=${process.env.NEXT_PUBLIC_TMDB_API}`);
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/discover/movie?api_key=${process.env.NEXT_PUBLIC_TMDB_API}`);
     // const response = await axios.get(`https://api.themoviedb.org/3/trending/movie/day?api_key=dd725b5608d426a3acd5a0b97d09f4ba`);
     console.log('ftehced', response.data)
     return response.data.results;

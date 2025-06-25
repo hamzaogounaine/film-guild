@@ -206,7 +206,7 @@ const Page = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br bg-black  text-white">
+    <div className="min-h-screen bg-gradient-to-br bg-black text-white">
       {/* Hero Section with Movie Backdrop */}
       <div className="relative">
         {movie.backdrop_path && (
@@ -228,15 +228,13 @@ const Page = () => {
             {/* Movie Title & Quick Info */}
             <div className="mb-6">
               <div className="flex items-center gap-4 mb-4">
-                <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-white to-black bg-clip-text text-transparent">
+                <h1 className="text-3xl md:text-4xl font-bold text-white">
                   {movie.title || "Loading..."}
                 </h1>
-                <div className="flex items-center gap-2">
-                  
-                </div>
+                <Badge className="bg-red-600 text-white">Movie</Badge> {/* Added to match TV show */}
               </div>
 
-              <div className="flex items-center gap-6 text-black mb-4">
+              <div className="flex items-center gap-6 text-white mb-4">
                 {movie.release_date && (
                   <div className="flex items-center gap-1">
                     <Calendar className="w-4 h-4" />
@@ -286,8 +284,8 @@ const Page = () => {
                   <div className="absolute inset-0 bg-black/80 flex items-center justify-center z-20">
                     <div className="text-center">
                       <div className="w-12 h-12 border-4 border-red-500 border-t-transparent rounded-full animate-spin mx-auto mb-3"></div>
-                      <p className="text-lg">Switching to {selectedServer.name}...</p>
-                      <p className="text-sm text-black">
+                      <p className="text-lg text-white">Switching to {selectedServer.name}...</p>
+                      <p className="text-sm text-gray-400">
                         {selectedServer.quality} • {selectedServer.location}
                       </p>
                     </div>
@@ -329,8 +327,6 @@ const Page = () => {
           <div className="grid lg:grid-cols-3 gap-8">
             {/* Movie Information */}
             <div className="lg:col-span-2 space-y-6">
-           
-
               {/* Current Server Status */}
               <Card className="bg-gray-800/50 backdrop-blur-sm border-gray-700">
                 <CardContent className="p-6">
@@ -343,19 +339,19 @@ const Page = () => {
                     <div className="text-center p-3 bg-gray-700/30 rounded-lg">
                       <div className="text-2xl mb-1">{selectedServer.flag}</div>
                       <div className="text-sm font-medium">{selectedServer.location}</div>
-                      <div className="text-xs text-black">Location</div>
+                      <div className="text-xs text-gray-300">Location</div>
                     </div>
 
                     <div className="text-center p-3 bg-gray-700/30 rounded-lg">
                       <div className="text-lg font-bold text-blue-400">{selectedServer.quality}</div>
-                      <div className="text-xs text-black">Quality</div>
+                      <div className="text-xs text-gray-300">Quality</div>
                     </div>
 
                     <div className="text-center p-3 bg-gray-700/30 rounded-lg">
                       <div className={`text-lg font-bold ${getPingColor(selectedServer.ping)}`}>
                         {selectedServer.ping}ms
                       </div>
-                      <div className="text-xs text-black">Latency</div>
+                      <div className="text-xs text-gray-300">Latency</div>
                     </div>
 
                     <div className="text-center p-3 bg-gray-700/30 rounded-lg">
@@ -363,7 +359,7 @@ const Page = () => {
                         <Zap className="w-4 h-4 text-yellow-400" />
                         <span className="text-sm font-medium">{selectedServer.speed}</span>
                       </div>
-                      <div className="text-xs text-black">Speed</div>
+                      <div className="text-xs text-gray-300">Speed</div>
                     </div>
                   </div>
                 </CardContent>
@@ -403,7 +399,7 @@ const Page = () => {
                         </div>
 
                         <div className="flex items-center justify-between text-sm">
-                          <div className="flex items-center gap-4 text-black">
+                          <div className="flex items-center gap-4 text-gray-300">
                             <span>{server.quality}</span>
                             <span>•</span>
                             <span>{server.location}</span>
@@ -414,20 +410,20 @@ const Page = () => {
                           </div>
                         </div>
 
-                        <div className="mt-2 text-xs text-black">Speed: {server.speed}</div>
+                        <div className="mt-2 text-xs text-gray-300">Speed: {server.speed}</div>
                       </div>
                     ))}
                   </div>
 
                   {/* Server Statistics */}
                   <div className="mt-6 pt-4 border-t border-gray-600">
-                    <div className="flex items-center justify-between text-sm text-black">
+                    <div className="flex items-center justify-between text-sm text-gray-300">
                       <span>Online Servers:</span>
                       <span className="text-green-400 font-medium">
                         {servers.filter((s) => s.status === "online").length}/{servers.length}
                       </span>
                     </div>
-                    <div className="flex items-center justify-between text-sm text-black mt-1">
+                    <div className="flex items-center justify-between text-sm text-gray-300 mt-1">
                       <span>Best Ping:</span>
                       <span className="text-green-400 font-medium">
                         {Math.min(...servers.filter((s) => s.status === "online").map((s) => s.ping))}ms
@@ -436,8 +432,6 @@ const Page = () => {
                   </div>
                 </CardContent>
               </Card>
-
-              
             </div>
           </div>
         </div>
