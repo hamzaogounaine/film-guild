@@ -155,7 +155,7 @@ const Page = () => {
                 </div>
                 {movieDetails.popularity && (
                   <div className="flex items-center gap-1 sm:gap-2">
-                    <div className="w-4 h-4 sm:w-5 sm:h-5 bg-blue-600 rounded-full flex items-center justify-center">
+                    <div className="w-4 h-4 sm:w-5 sm:h-5 bg-red-600 rounded-full flex items-center justify-center">
                       <span className="text-xs font-bold">📊</span>
                     </div>
                     <span className="text-lg sm:text-xl font-semibold">
@@ -247,7 +247,7 @@ const Page = () => {
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
                   <Card className="bg-gray-800 border-gray-700">
                     <CardContent className="p-3 sm:p-4 text-center">
-                      <Calendar className="w-6 h-6 sm:w-8 sm:h-8 mx-auto mb-2 text-blue-400" />
+                      <Calendar className="w-6 h-6 sm:w-8 sm:h-8 mx-auto mb-2 text-red-400" />
                       <div className="text-lg sm:text-2xl font-bold">
                         {releaseYear}
                       </div>
@@ -374,7 +374,7 @@ const Page = () => {
                     href={movieDetails.homepage}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-blue-400 hover:text-blue-300 underline text-sm sm:text-base break-all"
+                    className="text-red-400 hover:text-red-300 underline text-sm sm:text-base break-all"
                   >
                     Visit Official Site
                   </a>
@@ -447,8 +447,10 @@ const Page = () => {
                       {movieDetails.belongs_to_collection.name}. Explore other
                       movies in this collection to discover the complete story.
                     </p>
-                    <Button className="bg-blue-600 hover:bg-blue-700 w-full sm:w-auto">
+                    <Button className="bg-red-600 hover:bg-red-700 w-full sm:w-auto">
+                      <Link href={`/collection/${movieDetails.belongs_to_collection.id}`}>
                       View Collection
+                      </Link>
                     </Button>
                   </div>
                 </div>
@@ -537,7 +539,7 @@ const Page = () => {
                   <Card className="bg-gray-800 border-gray-700">
                     <CardContent className="p-4">
                       <div className="text-center">
-                        <div className="text-lg sm:text-2xl font-bold text-blue-400">
+                        <div className="text-lg sm:text-2xl font-bold text-red-400">
                           {(
                             (movieDetails.revenue / movieDetails.budget) *
                             100
