@@ -25,7 +25,7 @@ import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import Image from "next/image"
 
-const Page = () => {
+export default function Page() {
   const servers = [
     {
       id: 1,
@@ -89,20 +89,46 @@ const Page = () => {
     },
   ]
 
+  const { id, season: urlSeason, episode: urlEpisode } = useParams()
+
   const [tvShow, setTvShow] = useState({})
   const [selectedServer, setSelectedServer] = useState(servers[0])
-  const [selectedSeason, setSelectedSeason] = useState(1)
-  const [selectedEpisode, setSelectedEpisode] = useState(1)
+  const [selectedSeason, setSelectedSeason] = useState(urlSeason ? Number.parseInt(urlSeason ) : 1)
+  const [selectedEpisode, setSelectedEpisode] = useState(urlEpisode ? Number.parseInt(urlEpisode ) : 1)
   const [episodes, setEpisodes] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [isEpisodesLoading, setIsEpisodesLoading] = useState(false)
   const [isLiked, setIsLiked] = useState(false)
   const [isServerSwitching, setIsServerSwitching] = useState(false)
-  const [episodeViewMode, setEpisodeViewMode] = useState("list") // "list" or "grid"
+  const [episodeViewMode, setEpisodeViewMode] = useState("list")
 
-  const { id } = useParams()
+  // State to track if localStorage has been loaded
+  const [localStorageLoaded, setLocalStorageLoaded] = useState(false)
 
+  // Load progress from localStorage first
   useEffect(() => {
+    if (id) {
+      const storageKey = `tv-progress-${id}`
+      const savedProgress = localStorage.getItem(storageKey)
+      if (savedProgress) {
+        try {
+          const parsedData = JSON.parse(savedProgress)
+          if (parsedData.season && parsedData.episode) {
+            setSelectedSeason(parsedData.season)
+            setSelectedEpisode(parsedData.episode)
+          }
+        } catch (error) {
+          console.error("Error parsing saved progress:", error)
+        }
+      }
+      setLocalStorageLoaded(true)
+    }
+  }, [id])
+
+  // Fetch TV show data after localStorage is loaded
+  useEffect(() => {
+    if (!localStorageLoaded) return
+
     const fetchTVShowData = async () => {
       try {
         setIsLoading(true)
@@ -111,10 +137,17 @@ const Page = () => {
         )
         setTvShow(res.data)
 
-        // Set initial season to the first available season (excluding specials)
-        const firstRegularSeason = res.data.seasons?.find((season) => season.season_number > 0)
-        if (firstRegularSeason) {
-          setSelectedSeason(firstRegularSeason.season_number)
+        // Only set initial season if no URL param AND no localStorage data
+        if (!urlSeason) {
+          const storageKey = `tv-progress-${id}`
+          const savedProgress = localStorage.getItem(storageKey)
+
+          if (!savedProgress) {
+            const firstRegularSeason = res.data.seasons?.find((season) => season.season_number > 0)
+            if (firstRegularSeason) {
+              setSelectedSeason(firstRegularSeason.season_number)
+            }
+          }
         }
       } catch (error) {
         console.error("Error fetching TV show data:", error)
@@ -123,11 +156,23 @@ const Page = () => {
       }
     }
     fetchTVShowData()
-  }, [id])
+  }, [id, urlSeason, localStorageLoaded])
+
+  useEffect(() => {
+    if (id && selectedSeason && selectedEpisode) {
+      const storageKey = `tv-progress-${id}`
+      const progressData = {
+        season: selectedSeason,
+        episode: selectedEpisode,
+        timestamp: Date.now(),
+      }
+      localStorage.setItem(storageKey, JSON.stringify(progressData))
+    }
+  }, [id, selectedSeason, selectedEpisode])
 
   useEffect(() => {
     const fetchEpisodes = async () => {
-      if (!selectedSeason || !id) return
+      if (!selectedSeason || !id || !localStorageLoaded) return
 
       try {
         setIsEpisodesLoading(true)
@@ -135,7 +180,21 @@ const Page = () => {
           `${process.env.NEXT_PUBLIC_BASE_URL}/tv/${id}/season/${selectedSeason}?api_key=${process.env.NEXT_PUBLIC_TMDB_API}`,
         )
         setEpisodes(res.data.episodes || [])
-        setSelectedEpisode(1) // Reset to first episode when season changes
+
+        // Only handle URL episode param if no localStorage data
+        const storageKey = `tv-progress-${id}`
+        const savedProgress = localStorage.getItem(storageKey)
+
+        if (!savedProgress) {
+          if (
+            urlEpisode &&
+            res.data.episodes?.find((ep) => ep.episode_number === Number.parseInt(urlEpisode ))
+          ) {
+            setSelectedEpisode(Number.parseInt(urlEpisode ))
+          } else if (!urlEpisode) {
+            setSelectedEpisode(1)
+          }
+        }
       } catch (error) {
         console.error("Error fetching episodes:", error)
         setEpisodes([])
@@ -144,7 +203,7 @@ const Page = () => {
       }
     }
     fetchEpisodes()
-  }, [selectedSeason, id])
+  }, [selectedSeason, id, urlEpisode, localStorageLoaded])
 
   const handleServerChange = (server) => {
     if (server.status === "online") {
@@ -160,16 +219,23 @@ const Page = () => {
     setSelectedEpisode(episodeNumber)
   }
 
+  const handleSeasonChange = (seasonNumber) => {
+    setSelectedSeason(seasonNumber)
+    setSelectedEpisode(1) // Reset to first episode when changing seasons
+  }
+
   const handleNextEpisode = () => {
     const currentEpisodeIndex = episodes.findIndex((ep) => ep.episode_number === selectedEpisode)
     if (currentEpisodeIndex < episodes.length - 1) {
-      setSelectedEpisode(episodes[currentEpisodeIndex + 1].episode_number)
+      const nextEpisode = episodes[currentEpisodeIndex + 1].episode_number
+      setSelectedEpisode(nextEpisode)
     } else {
       // Move to next season if available
       const currentSeasonIndex = tvShow.seasons?.findIndex((season) => season.season_number === selectedSeason)
       const nextSeason = tvShow.seasons?.[currentSeasonIndex + 1]
       if (nextSeason && nextSeason.season_number > 0) {
         setSelectedSeason(nextSeason.season_number)
+        setSelectedEpisode(1)
       }
     }
   }
@@ -177,13 +243,16 @@ const Page = () => {
   const handlePreviousEpisode = () => {
     const currentEpisodeIndex = episodes.findIndex((ep) => ep.episode_number === selectedEpisode)
     if (currentEpisodeIndex > 0) {
-      setSelectedEpisode(episodes[currentEpisodeIndex - 1].episode_number)
+      const prevEpisode = episodes[currentEpisodeIndex - 1].episode_number
+      setSelectedEpisode(prevEpisode)
     } else {
       // Move to previous season if available
       const currentSeasonIndex = tvShow.seasons?.findIndex((season) => season.season_number === selectedSeason)
       const prevSeason = tvShow.seasons?.[currentSeasonIndex - 1]
       if (prevSeason && prevSeason.season_number > 0) {
         setSelectedSeason(prevSeason.season_number)
+        // Set to last episode of previous season
+        setSelectedEpisode(prevSeason.episode_count || 1)
       }
     }
   }
@@ -205,7 +274,7 @@ const Page = () => {
       case "maintenance":
         return "bg-yellow-500"
       default:
-        return "bg-black"
+        return "bg-gray-500"
     }
   }
 
@@ -244,7 +313,7 @@ const Page = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br bg-black flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br bg-gray-900 flex items-center justify-center">
         <div className="text-center">
           <div className="w-16 h-16 border-4 border-red-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
           <p className="text-white text-lg">Loading TV Show...</p>
@@ -257,7 +326,7 @@ const Page = () => {
   const currentSeason = getCurrentSeason()
 
   return (
-    <div className="min-h-screen bg-gradient-to-br bg-black text-white">
+    <div className="min-h-screen bg-gradient-to-br bg-gray-900 text-white">
       {/* Hero Section with TV Show Backdrop */}
       <div className="relative">
         {tvShow.backdrop_path && (
@@ -266,10 +335,10 @@ const Page = () => {
               width={1920}
               height={800}
               src={`https://image.tmdb.org/t/p/w1920_and_h800_multi_faces${tvShow.backdrop_path}`}
-              alt={tvShow.name}
+              alt={tvShow.name || "TV Show"}
               className="w-full h-full object-cover"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/60 to-transparent" />
           </div>
         )}
 
@@ -279,7 +348,7 @@ const Page = () => {
             {/* TV Show Title & Episode Info */}
             <div className="mb-6">
               <div className="flex items-center gap-4 mb-4">
-                <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r text-white  bg-clip-text ">
+                <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
                   {tvShow.name || "Loading..."}
                 </h1>
                 <Badge className="bg-red-600 text-white">TV Show</Badge>
@@ -291,13 +360,13 @@ const Page = () => {
                   <h2 className="text-xl md:text-2xl font-semibold text-gray-200 mb-2">
                     S{selectedSeason}E{selectedEpisode}: {currentEpisode.name}
                   </h2>
-                  <p className="text-gray-300 text-sm md:text-base line-clamp-2">
+                  <p className="text-gray-400 text-sm md:text-base line-clamp-2">
                     {currentEpisode.overview || "No description available."}
                   </p>
                 </div>
               )}
 
-              <div className="flex items-center gap-6 text-white mb-4 flex-wrap">
+              <div className="flex items-center gap-6 text-gray-300 mb-4 flex-wrap">
                 {tvShow.first_air_date && (
                   <div className="flex items-center gap-1">
                     <Calendar className="w-4 h-4" />
@@ -410,7 +479,7 @@ const Page = () => {
                     <span className="font-semibold">
                       S{selectedSeason}E{selectedEpisode}
                     </span>
-                    {currentEpisode && <span className="ml-2 text-white">{currentEpisode.name}</span>}
+                    {currentEpisode && <span className="ml-2 text-gray-300">{currentEpisode.name}</span>}
                   </div>
                 </div>
               </div>
@@ -447,10 +516,10 @@ const Page = () => {
 
                   <div className="flex gap-4 mb-6">
                     <div className="flex-1">
-                      <label className="block text-sm font-medium text-white mb-2">Season</label>
+                      <label className="block text-sm font-medium text-gray-400 mb-2">Season</label>
                       <Select
                         value={selectedSeason.toString()}
-                        onValueChange={(value) => setSelectedSeason(Number.parseInt(value))}
+                        onValueChange={(value) => handleSeasonChange(Number.parseInt(value))}
                       >
                         <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
                           <SelectValue />
@@ -479,68 +548,69 @@ const Page = () => {
                     </div>
                   ) : (
                     <div className={episodeViewMode === "grid" ? "grid grid-cols-1 md:grid-cols-2 gap-4" : "space-y-3"}>
-                    {episodes.map((episode) => (
-                      <div
-                        key={episode.id}
-                        className={`p-4 rounded-lg border cursor-pointer transition-all duration-300 hover:scale-[1.02] ${
-                          selectedEpisode === episode.episode_number
-                            ? "border-red-500 bg-red-500/10 shadow-lg shadow-red-500/20"
-                            : "border-gray-600 hover:border-black bg-gray-700/30"
-                        }`}
-                        onClick={() => handleEpisodeChange(episode.episode_number)}
-                      >
-                        <div className="flex gap-4">
-                          {/* Episode Thumbnail - Always show */}
-                          <div className="flex-shrink-0">
-                            <Image
-                              width={episodeViewMode === "grid" ? 200 : 120}
-                              height={episodeViewMode === "grid" ? 113 : 68}
-                              src={
-                                episode.still_path
-                                  ? `https://image.tmdb.org/t/p/w300${episode.still_path}`
-                                  : "/placeholder.svg?height=113&width=200"
-                              }
-                              alt={episode.name}
-                              className={`${
-                                episodeViewMode === "grid" ? "w-32 h-18" : "w-20 h-12"
-                              } object-cover rounded flex-shrink-0 bg-gray-700`}
-                              onError={(e) => {
-                                e.target.src = "/placeholder.svg?height=113&width=200"
-                              }}
-                            />
-                            {/* Episode Number Overlay */}
-                           
-                          </div>
-
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-2 mb-1">
-                              <span className="font-semibold text-sm">Episode {episode.episode_number}</span>
-                              {episode.vote_average > 0 && (
-                                <div className="flex items-center gap-1">
-                                  <Star className="w-3 h-3 text-yellow-400 fill-current" />
-                                  <span className="text-xs text-white">{episode.vote_average.toFixed(1)}</span>
+                      {episodes.map((episode) => (
+                        <div
+                          key={episode.id}
+                          className={`p-4 rounded-lg border cursor-pointer transition-all duration-300 hover:scale-[1.02] ${
+                            selectedEpisode === episode.episode_number
+                              ? "border-red-500 bg-red-500/10 shadow-lg shadow-red-500/20"
+                              : "border-gray-600 hover:border-gray-500 bg-gray-700/30"
+                          }`}
+                          onClick={() => handleEpisodeChange(episode.episode_number)}
+                        >
+                          <div className="flex gap-4">
+                            {/* Episode Thumbnail */}
+                            <div className="flex-shrink-0">
+                              <Image
+                                width={episodeViewMode === "grid" ? 200 : 120}
+                                height={episodeViewMode === "grid" ? 113 : 68}
+                                src={
+                                  episode.still_path
+                                    ? `https://image.tmdb.org/t/p/w300${episode.still_path}`
+                                    : "/placeholder.svg?height=113&width=200"
+                                }
+                                alt={episode.name || "Episode"}
+                                className={`${
+                                  episodeViewMode === "grid" ? "w-32 h-18" : "w-20 h-12"
+                                } object-cover rounded flex-shrink-0 bg-gray-700`}
+                              />
+                              {/* Episode Number Overlay */}
+                              <div className="relative -mt-6 ml-2">
+                                <div className="bg-black/80 text-white text-xs px-2 py-1 rounded">
+                                  E{episode.episode_number}
                                 </div>
-                              )}
-                              {/* Runtime Badge */}
-                              {episode.runtime && (
-                                <Badge variant="outline" className="text-xs border-gray-600 text-gray-400">
-                                  {formatRuntime(episode.runtime)}
-                                </Badge>
-                              )}
+                              </div>
                             </div>
-                            <h4 className="font-medium text-white mb-1 line-clamp-1">{episode.name}</h4>
-                            <p className="text-gray-400 text-xs line-clamp-2 leading-relaxed">
-                              {episode.overview || "No description available."}
-                            </p>
-                            <div className="flex items-center gap-4 mt-2 text-xs text-white">
-                              {episode.air_date && <span>Aired: {formatDate(episode.air_date)}</span>}
-                              {episode.vote_count > 0 && <span>{episode.vote_count} votes</span>}
+
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-2 mb-1">
+                                <span className="font-semibold text-sm">Episode {episode.episode_number}</span>
+                                {episode.vote_average > 0 && (
+                                  <div className="flex items-center gap-1">
+                                    <Star className="w-3 h-3 text-yellow-400 fill-current" />
+                                    <span className="text-xs text-gray-400">{episode.vote_average.toFixed(1)}</span>
+                                  </div>
+                                )}
+                                {/* Runtime Badge */}
+                                {episode.runtime && (
+                                  <Badge variant="outline" className="text-xs border-gray-600 text-gray-400">
+                                    {formatRuntime(episode.runtime)}
+                                  </Badge>
+                                )}
+                              </div>
+                              <h4 className="font-medium text-white mb-1 line-clamp-1">{episode.name}</h4>
+                              <p className="text-gray-400 text-xs line-clamp-2 leading-relaxed">
+                                {episode.overview || "No description available."}
+                              </p>
+                              <div className="flex items-center gap-4 mt-2 text-xs text-gray-500">
+                                {episode.air_date && <span>Aired: {formatDate(episode.air_date)}</span>}
+                                {episode.vote_count > 0 && <span>{episode.vote_count} votes</span>}
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                    ))}
-                  </div>
+                      ))}
+                    </div>
                   )}
                 </CardContent>
               </Card>
@@ -557,19 +627,19 @@ const Page = () => {
                     <div className="text-center p-3 bg-gray-700/30 rounded-lg">
                       <div className="text-2xl mb-1">{selectedServer.flag}</div>
                       <div className="text-sm font-medium">{selectedServer.location}</div>
-                      <div className="text-xs text-gray-300">Location</div>
+                      <div className="text-xs text-gray-400">Location</div>
                     </div>
 
                     <div className="text-center p-3 bg-gray-700/30 rounded-lg">
                       <div className="text-lg font-bold text-blue-400">{selectedServer.quality}</div>
-                      <div className="text-xs text-gray-300">Quality</div>
+                      <div className="text-xs text-gray-400">Quality</div>
                     </div>
 
                     <div className="text-center p-3 bg-gray-700/30 rounded-lg">
                       <div className={`text-lg font-bold ${getPingColor(selectedServer.ping)}`}>
                         {selectedServer.ping}ms
                       </div>
-                      <div className="text-xs text-gray-300">Latency</div>
+                      <div className="text-xs text-gray-400">Latency</div>
                     </div>
 
                     <div className="text-center p-3 bg-gray-700/30 rounded-lg">
@@ -577,7 +647,7 @@ const Page = () => {
                         <Zap className="w-4 h-4 text-yellow-400" />
                         <span className="text-sm font-medium">{selectedServer.speed}</span>
                       </div>
-                      <div className="text-xs text-gray-300">Speed</div>
+                      <div className="text-xs text-gray-400">Speed</div>
                     </div>
                   </div>
                 </CardContent>
@@ -600,7 +670,7 @@ const Page = () => {
                         className={`p-4 rounded-lg border cursor-pointer transition-all duration-300 hover:scale-[1.02] ${
                           selectedServer.id === server.id
                             ? "border-red-500 bg-red-500/10 shadow-lg shadow-red-500/20"
-                            : "border-gray-600 hover:border-black bg-gray-700/30"
+                            : "border-gray-600 hover:border-gray-500 bg-gray-700/30"
                         } ${server.status !== "online" ? "opacity-50 cursor-not-allowed" : ""}`}
                         onClick={() => handleServerChange(server)}
                       >
@@ -617,7 +687,7 @@ const Page = () => {
                         </div>
 
                         <div className="flex items-center justify-between text-sm">
-                          <div className="flex items-center gap-4 text-gray-300">
+                          <div className="flex items-center gap-4 text-gray-400">
                             <span>{server.quality}</span>
                             <span>•</span>
                             <span>{server.location}</span>
@@ -628,20 +698,20 @@ const Page = () => {
                           </div>
                         </div>
 
-                        <div className="mt-2 text-xs text-gray-300">Speed: {server.speed}</div>
+                        <div className="mt-2 text-xs text-gray-500">Speed: {server.speed}</div>
                       </div>
                     ))}
                   </div>
 
                   {/* Server Statistics */}
                   <div className="mt-6 pt-4 border-t border-gray-600">
-                    <div className="flex items-center justify-between text-sm text-gray-300">
+                    <div className="flex items-center justify-between text-sm text-gray-400">
                       <span>Online Servers:</span>
                       <span className="text-green-400 font-medium">
                         {servers.filter((s) => s.status === "online").length}/{servers.length}
                       </span>
                     </div>
-                    <div className="flex items-center justify-between text-sm text-gray-300 mt-1">
+                    <div className="flex items-center justify-between text-sm text-gray-400 mt-1">
                       <span>Best Ping:</span>
                       <span className="text-green-400 font-medium">
                         {Math.min(...servers.filter((s) => s.status === "online").map((s) => s.ping))}ms
@@ -661,24 +731,24 @@ const Page = () => {
                         width={200}
                         height={300}
                         src={`https://image.tmdb.org/t/p/w300${currentSeason.poster_path}`}
-                        alt={currentSeason.name}
+                        alt={currentSeason.name || "Season"}
                         className="w-full h-48 object-cover rounded-lg mb-4"
                       />
                     )}
                     <div className="space-y-2 text-sm">
                       <div className="flex justify-between">
-                        <span className="text-white">Episodes:</span>
+                        <span className="text-gray-400">Episodes:</span>
                         <span>{currentSeason.episode_count}</span>
                       </div>
                       {currentSeason.air_date && (
                         <div className="flex justify-between">
-                          <span className="text-white">Air Date:</span>
+                          <span className="text-gray-400">Air Date:</span>
                           <span>{formatDate(currentSeason.air_date)}</span>
                         </div>
                       )}
                       {currentSeason.vote_average > 0 && (
                         <div className="flex justify-between">
-                          <span className="text-white">Rating:</span>
+                          <span className="text-gray-400">Rating:</span>
                           <span className="flex items-center gap-1">
                             <Star className="w-3 h-3 text-yellow-400 fill-current" />
                             {currentSeason.vote_average.toFixed(1)}
@@ -699,5 +769,3 @@ const Page = () => {
     </div>
   )
 }
-
-export default Page
