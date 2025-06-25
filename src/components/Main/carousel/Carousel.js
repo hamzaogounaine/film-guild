@@ -124,17 +124,20 @@ const handleWheel = (e) => {
 
 return (
   <div className={`w-full ${className}`}>
-    {/* Header */}
-    <div className="flex items-center justify-between mb-6">
-      <div>
-        <h2 className="text-2xl font-bold text-white mb-1">{title}</h2>
-        <p className="text-gray-400 text-sm">
+    {/* Red horizontal rectangle */}
+      
+
+      {/* Header */}
+      <div className="flex items-center justify-between mb-6">
+        <div>
+        <h2 className="text-2xl font-bold text-white mb-1 relative px-5"><div className="left-0 h-full w-[4px] bg-red-500 absolute"></div>{title}</h2>
+        <p className="text-black text-sm">
           {totalItems} item{totalItems !== 1 ? "s" : ""} • Showing {itemsPerView} per view
         </p>
+        </div>
       </div>
-    </div>
 
-    {/* Carousel Container */}
+      {/* Carousel Container */}
     <div className="relative">
       {/* Navigation Buttons */}
       {showControls && totalItems > itemsPerView && (
@@ -166,7 +169,7 @@ return (
       {/* Scrollable Container with Native Scrollbar */}
       <div
         ref={scrollContainerRef}
-        className="overflow-x-auto overflow-y-hidden scrollbar-thin scrollbar-track-gray-800 scrollbar-thumb-gray-600 hover:scrollbar-thumb-gray-500"
+        className="overflow-x-auto overflow-y-hidden scrollbar-thin scrollbar-track-gray-800 scrollbar-thumb-gray-600 hover:scrollbar-thumb-black"
         onScroll={handleScroll}
         onWheel={handleWheel}
         style={{
@@ -217,7 +220,7 @@ return (
         <div 
         
         
-        className="flex gap-4 overflow-x-auto overflow-y-hidden scrollbar-thin scrollbar-track-gray-800 scrollbar-thumb-gray-600 hover:scrollbar-thumb-gray-500"
+        className="flex gap-4 overflow-x-auto overflow-y-hidden scrollbar-thin scrollbar-track-gray-800 scrollbar-thumb-gray-600 hover:scrollbar-thumb-black"
         >
           {!items.length && !children && (Array.from({ length: 10 }).map((_, index) => (
             <div
@@ -238,7 +241,7 @@ return (
     </div>
 
     {/* Carousel Info */}
-    <div className="flex items-center justify-between mt-4 text-xs text-gray-500">
+    <div className="flex items-center justify-between mt-4 text-xs text-black">
       <span>
         Viewing items {currentIndex + 1}-{Math.min(currentIndex + itemsPerView, totalItems)} of {totalItems}
       </span>

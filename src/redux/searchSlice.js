@@ -23,7 +23,7 @@ const searchSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchSearch.pending, (state) => {
-        state.status = "loading";
+        state.status = "pending";
       })
       .addCase(fetchSearch.fulfilled, (state, action) => {
         state.status = "succeeded";

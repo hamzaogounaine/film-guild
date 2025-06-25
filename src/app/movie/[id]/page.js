@@ -62,7 +62,7 @@ const Page = () => {
 
   if (!movieDetails) {
     return (
-      <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center p-4">
+      <div className="min-h-screen bg-black text-white flex items-center justify-center p-4">
         <p className="text-center">Movie not found</p>
       </div>
     );
@@ -76,7 +76,7 @@ const Page = () => {
   const formattedRevenue = formatCurrency(movieDetails.revenue);
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white pb-16">
+    <div className="min-h-screen bg-black text-white pb-16">
       {/* Hero Section */}
       <div className="relative h-[80vh] sm:h-[80vh] lg:h-[70vh] overflow-hidden">
         <Image
@@ -86,7 +86,7 @@ const Page = () => {
           alt={movieDetails.title}
           className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/60 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent" />
         <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6 lg:p-8">
           <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-4 sm:gap-6 lg:gap-8">
             {/* Movie Poster */}
@@ -107,11 +107,11 @@ const Page = () => {
                   {movieDetails.title}
                 </h1>
                 {movieDetails.tagline && (
-                 <p className="text-sm sm:text-lg lg:text-xl text-gray-300 italic mb-2 sm:mb-4">
+                 <p className="text-sm sm:text-lg lg:text-xl text-black italic mb-2 sm:mb-4">
                  &quot;{movieDetails?.tagline || 'No tagline available'}&quot;
                </p>
                 )}
-                <div className="flex items-center justify-center lg:justify-start gap-2 sm:gap-4 text-xs sm:text-sm lg:text-base text-gray-300 flex-wrap">
+                <div className="flex items-center justify-center lg:justify-start gap-2 sm:gap-4 text-xs sm:text-sm lg:text-base text-black flex-wrap">
                   <span>{releaseYear}</span>
                   <span>•</span>
                   <span>{movieDetails.adult ? "R" : "PG-13"}</span>
@@ -146,9 +146,9 @@ const Page = () => {
                   <span className="text-lg sm:text-xl font-semibold">
                     {movieDetails.vote_average?.toFixed(1) || "N/A"}
                   </span>
-                  <span className="text-gray-400 text-sm">/10</span>
+                  <span className="text-black text-sm">/10</span>
                   {movieDetails.vote_count && (
-                    <span className="text-xs text-gray-400 hidden sm:inline">
+                    <span className="text-xs text-black hidden sm:inline">
                       ({movieDetails.vote_count.toLocaleString()} votes)
                     </span>
                   )}
@@ -161,7 +161,7 @@ const Page = () => {
                     <span className="text-lg sm:text-xl font-semibold">
                       {Math.round(movieDetails.popularity)}
                     </span>
-                    <span className="text-gray-400 text-sm hidden sm:inline">
+                    <span className="text-black text-sm hidden sm:inline">
                       Popularity
                     </span>
                   </div>
@@ -221,7 +221,7 @@ const Page = () => {
               className={`pb-4 px-2 capitalize font-medium transition-colors whitespace-nowrap text-sm sm:text-base ${
                 activeTab === tab
                   ? "text-red-500 border-b-2 border-red-500"
-                  : "text-gray-400 hover:text-white"
+                  : "text-black hover:text-white"
               }`}
             >
               {tab}
@@ -235,7 +235,7 @@ const Page = () => {
             <div className="lg:col-span-2 space-y-6">
               <div>
                 <h2 className="text-xl sm:text-2xl font-bold mb-4">Overview</h2>
-                <p className="text-gray-300 leading-relaxed text-sm sm:text-base lg:text-lg">
+                <p className="text-black leading-relaxed text-sm sm:text-base lg:text-lg">
                   {movieDetails.overview || "No overview available."}
                 </p>
               </div>
@@ -251,7 +251,7 @@ const Page = () => {
                       <div className="text-lg sm:text-2xl font-bold">
                         {releaseYear}
                       </div>
-                      <div className="text-gray-400 text-xs sm:text-sm">
+                      <div className="text-black text-xs sm:text-sm">
                         Release Year
                       </div>
                     </CardContent>
@@ -262,7 +262,7 @@ const Page = () => {
                       <div className="text-lg sm:text-2xl font-bold">
                         {formattedRuntime}
                       </div>
-                      <div className="text-gray-400 text-xs sm:text-sm">
+                      <div className="text-black text-xs sm:text-sm">
                         Runtime
                       </div>
                     </CardContent>
@@ -273,7 +273,7 @@ const Page = () => {
                       <div className="text-sm sm:text-lg font-bold">
                         {formattedBudget}
                       </div>
-                      <div className="text-gray-400 text-xs sm:text-sm">
+                      <div className="text-black text-xs sm:text-sm">
                         Budget
                       </div>
                     </CardContent>
@@ -284,7 +284,7 @@ const Page = () => {
                       <div className="text-sm sm:text-lg font-bold">
                         {formattedRevenue}
                       </div>
-                      <div className="text-gray-400 text-xs sm:text-sm">
+                      <div className="text-black text-xs sm:text-sm">
                         Box Office
                       </div>
                     </CardContent>
@@ -300,12 +300,12 @@ const Page = () => {
                 </h3>
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm sm:text-base">
-                    <span className="text-gray-400">Status:</span>
+                    <span className="text-black">Status:</span>
                     <span>{movieDetails.status || "Unknown"}</span>
                   </div>
                   {movieDetails.release_date && (
                     <div className="flex justify-between text-sm sm:text-base">
-                      <span className="text-gray-400">Release Date:</span>
+                      <span className="text-black">Release Date:</span>
                       <span>
                         {new Date(
                           movieDetails.release_date
@@ -315,7 +315,7 @@ const Page = () => {
                   )}
                   {movieDetails.original_language && (
                     <div className="flex justify-between text-sm sm:text-base">
-                      <span className="text-gray-400">Original Language:</span>
+                      <span className="text-black">Original Language:</span>
                       <span>
                         {movieDetails.original_language.toUpperCase()}
                       </span>
@@ -335,7 +335,7 @@ const Page = () => {
                         <Badge
                           key={lang.iso_639_1}
                           variant="outline"
-                          className="border-gray-600 text-gray-300 text-xs"
+                          className="border-gray-600 text-black text-xs"
                         >
                           {lang.english_name}
                         </Badge>
@@ -355,7 +355,7 @@ const Page = () => {
                         <Badge
                           key={country.iso_3166_1}
                           variant="outline"
-                          className="border-gray-600 text-gray-300 text-xs"
+                          className="border-gray-600 text-black text-xs"
                         >
                           <Globe className="w-3 h-3 mr-1" />
                           {country.name}
@@ -403,13 +403,13 @@ const Page = () => {
                           className="w-10 h-10 sm:w-12 sm:h-12 object-contain"
                         />
                       ) : (
-                        <Building className="w-10 h-10 sm:w-12 sm:h-12 text-gray-400" />
+                        <Building className="w-10 h-10 sm:w-12 sm:h-12 text-black" />
                       )}
                       <div className="min-w-0 flex-1">
                         <h3 className="font-semibold text-sm sm:text-base truncate">
                           {company.name}
                         </h3>
-                        <p className="text-gray-400 text-xs sm:text-sm">
+                        <p className="text-black text-xs sm:text-sm">
                           {company.origin_country || "Unknown"}
                         </p>
                       </div>
@@ -442,7 +442,7 @@ const Page = () => {
                     <h3 className="text-xl sm:text-2xl font-bold mb-4">
                       {movieDetails.belongs_to_collection.name}
                     </h3>
-                    <p className="text-gray-300 mb-4 text-sm sm:text-base">
+                    <p className="text-black mb-4 text-sm sm:text-base">
                       This movie is part of the{" "}
                       {movieDetails.belongs_to_collection.name}. Explore other
                       movies in this collection to discover the complete story.
@@ -466,37 +466,37 @@ const Page = () => {
               <div className="space-y-4">
                 {movieDetails.id && (
                   <div className="flex justify-between py-2 border-b border-gray-700 text-sm sm:text-base">
-                    <span className="text-gray-400">TMDB ID</span>
+                    <span className="text-black">TMDB ID</span>
                     <span>{movieDetails.id}</span>
                   </div>
                 )}
                 {movieDetails.imdb_id && (
                   <div className="flex justify-between py-2 border-b border-gray-700 text-sm sm:text-base">
-                    <span className="text-gray-400">IMDb ID</span>
+                    <span className="text-black">IMDb ID</span>
                     <span>{movieDetails.imdb_id}</span>
                   </div>
                 )}
                 {movieDetails.original_title && (
                   <div className="flex justify-between py-2 border-b border-gray-700 text-sm sm:text-base">
-                    <span className="text-gray-400">Original Title</span>
+                    <span className="text-black">Original Title</span>
                     <span className="text-right ml-4 break-words">
                       {movieDetails.original_title}
                     </span>
                   </div>
                 )}
                 <div className="flex justify-between py-2 border-b border-gray-700 text-sm sm:text-base">
-                  <span className="text-gray-400">Adult Content</span>
+                  <span className="text-black">Adult Content</span>
                   <span>{movieDetails.adult ? "Yes" : "No"}</span>
                 </div>
                 {movieDetails.popularity && (
                   <div className="flex justify-between py-2 border-b border-gray-700 text-sm sm:text-base">
-                    <span className="text-gray-400">Popularity Score</span>
+                    <span className="text-black">Popularity Score</span>
                     <span>{movieDetails.popularity.toFixed(1)}</span>
                   </div>
                 )}
                 {movieDetails.vote_count && (
                   <div className="flex justify-between py-2 border-b border-gray-700 text-sm sm:text-base">
-                    <span className="text-gray-400">Vote Count</span>
+                    <span className="text-black">Vote Count</span>
                     <span>{movieDetails.vote_count.toLocaleString()}</span>
                   </div>
                 )}
@@ -514,7 +514,7 @@ const Page = () => {
                       <div className="text-lg sm:text-2xl font-bold text-green-400">
                         {formattedBudget}
                       </div>
-                      <div className="text-gray-400 text-sm">
+                      <div className="text-black text-sm">
                         Production Budget
                       </div>
                     </div>
@@ -527,7 +527,7 @@ const Page = () => {
                       <div className="text-lg sm:text-2xl font-bold text-yellow-400">
                         {formattedRevenue}
                       </div>
-                      <div className="text-gray-400 text-sm">
+                      <div className="text-black text-sm">
                         Box Office Revenue
                       </div>
                     </div>
@@ -544,7 +544,7 @@ const Page = () => {
                           ).toFixed(0)}
                           %
                         </div>
-                        <div className="text-gray-400 text-sm">
+                        <div className="text-black text-sm">
                           Return on Investment
                         </div>
                       </div>

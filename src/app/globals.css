@@ -181,7 +181,7 @@
     background-color: rgb(229 231 235);
   }
 
-  .hover\:scrollbar-thumb-gray-500:hover::-webkit-scrollbar-thumb {
+  .hover\:scrollbar-thumb-black:hover::-webkit-scrollbar-thumb {
     background-color: rgb(229 231 235);
   }
 

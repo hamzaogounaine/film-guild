@@ -126,27 +126,27 @@ const SearchPage = () => {
   const totalResults = searchResults.length
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white pt-16">
+    <div className="min-h-screen bg-black text-white pt-16">
       {/* Header */}
-      <div className="bg-gray-800 border-b border-gray-700">
+      <div className="bg-black/80 border-b border-black">
         <div className="max-w-7xl mx-auto p-4 sm:p-6">
           <h1 className="text-2xl sm:text-3xl font-bold mb-6">Search Movies & TV Shows</h1>
 
           {/* Search Input */}
           <div className="relative max-w-2xl">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-300 w-5 h-5" />
               <Input
                 type="text"
                 placeholder="Search for movies, TV shows, actors, directors..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 pr-10 py-3 bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-red-500 focus:ring-red-500 text-base sm:text-lg"
+                className="pl-10 pr-10 py-3 bg-gray-700 border-gray-600 text-white placeholder-black focus:border-red-500 focus:ring-red-500 text-base sm:text-lg"
               />
               {searchQuery && (
                 <button
                   onClick={clearSearch}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-300 hover:text-white"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -163,7 +163,7 @@ const SearchPage = () => {
 
           {/* Search Stats */}
           {searchQuery && !isLoading && (
-            <div className="mt-4 text-sm text-gray-400">
+            <div className="mt-4 text-sm text-gray-300">
               {totalResults > 0 ? (
                 <span>
                   Found {totalResults} result{totalResults !== 1 ? "s" : ""} for &quot;{searchQuery}&quot;
@@ -231,7 +231,7 @@ const SearchPage = () => {
           <div className="flex items-center justify-center py-12">
             <div className="text-center">
               <Loader2 className="w-8 h-8 animate-spin text-red-500 mx-auto mb-4" />
-              <p className="text-gray-400">Searching for movies and TV shows...</p>
+              <p className="text-gray-300">Searching for movies and TV shows...</p>
             </div>
           </div>
         )}
@@ -280,7 +280,7 @@ const SearchPage = () => {
                         {getTitle(item)}
                       </h3>
 
-                      <div className="flex items-center gap-2 text-xs text-gray-400 mb-2">
+                      <div className="flex items-center gap-2 text-xs text-gray-300 mb-2">
                         <Calendar className="w-3 h-3" />
                         <span>{formatDate(getReleaseDate(item))}</span>
                         {item.origin_country && item.origin_country.length > 0 && (
@@ -319,7 +319,7 @@ const SearchPage = () => {
         {/* No Results */}
         {searchQuery && !isLoading && searchResults.length === 0 && !error && (
           <div className="text-center py-12">
-            <div className="text-gray-400 mb-4">
+            <div className="text-gray-300 mb-4">
               <Search className="w-16 h-16 mx-auto mb-4 opacity-50" />
               <h3 className="text-xl font-semibold mb-2">No results found</h3>
               <p>Try searching with different keywords or check your spelling.</p>
@@ -327,7 +327,7 @@ const SearchPage = () => {
 
             {/* Search Suggestions */}
             <div className="mt-6">
-              <p className="text-sm text-gray-500 mb-3">Try searching for:</p>
+              <p className="text-sm text-gray-300 mb-3">Try searching for:</p>
               <div className="flex flex-wrap justify-center gap-2">
                 {popularSearches.slice(0, 3).map((suggestion, index) => (
                   <Button

@@ -157,7 +157,7 @@ const Page = () => {
       case "maintenance":
         return "bg-yellow-500"
       default:
-        return "bg-gray-500"
+        return "bg-black"
     }
   }
 
@@ -196,7 +196,7 @@ const Page = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br bg-gray-900 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br bg-black flex items-center justify-center">
         <div className="text-center">
           <div className="w-16 h-16 border-4 border-red-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
           <p className="text-white text-lg">Loading movie...</p>
@@ -206,7 +206,7 @@ const Page = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br bg-gray-900  text-white">
+    <div className="min-h-screen bg-gradient-to-br bg-black  text-white">
       {/* Hero Section with Movie Backdrop */}
       <div className="relative">
         {movie.backdrop_path && (
@@ -218,7 +218,7 @@ const Page = () => {
               alt={movie.title}
               className="w-full h-full object-cover"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/60 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent" />
           </div>
         )}
 
@@ -228,7 +228,7 @@ const Page = () => {
             {/* Movie Title & Quick Info */}
             <div className="mb-6">
               <div className="flex items-center gap-4 mb-4">
-                <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+                <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-white to-black bg-clip-text text-transparent">
                   {movie.title || "Loading..."}
                 </h1>
                 <div className="flex items-center gap-2">
@@ -236,7 +236,7 @@ const Page = () => {
                 </div>
               </div>
 
-              <div className="flex items-center gap-6 text-gray-300 mb-4">
+              <div className="flex items-center gap-6 text-black mb-4">
                 {movie.release_date && (
                   <div className="flex items-center gap-1">
                     <Calendar className="w-4 h-4" />
@@ -287,7 +287,7 @@ const Page = () => {
                     <div className="text-center">
                       <div className="w-12 h-12 border-4 border-red-500 border-t-transparent rounded-full animate-spin mx-auto mb-3"></div>
                       <p className="text-lg">Switching to {selectedServer.name}...</p>
-                      <p className="text-sm text-gray-400">
+                      <p className="text-sm text-black">
                         {selectedServer.quality} • {selectedServer.location}
                       </p>
                     </div>
@@ -343,19 +343,19 @@ const Page = () => {
                     <div className="text-center p-3 bg-gray-700/30 rounded-lg">
                       <div className="text-2xl mb-1">{selectedServer.flag}</div>
                       <div className="text-sm font-medium">{selectedServer.location}</div>
-                      <div className="text-xs text-gray-400">Location</div>
+                      <div className="text-xs text-black">Location</div>
                     </div>
 
                     <div className="text-center p-3 bg-gray-700/30 rounded-lg">
                       <div className="text-lg font-bold text-blue-400">{selectedServer.quality}</div>
-                      <div className="text-xs text-gray-400">Quality</div>
+                      <div className="text-xs text-black">Quality</div>
                     </div>
 
                     <div className="text-center p-3 bg-gray-700/30 rounded-lg">
                       <div className={`text-lg font-bold ${getPingColor(selectedServer.ping)}`}>
                         {selectedServer.ping}ms
                       </div>
-                      <div className="text-xs text-gray-400">Latency</div>
+                      <div className="text-xs text-black">Latency</div>
                     </div>
 
                     <div className="text-center p-3 bg-gray-700/30 rounded-lg">
@@ -363,7 +363,7 @@ const Page = () => {
                         <Zap className="w-4 h-4 text-yellow-400" />
                         <span className="text-sm font-medium">{selectedServer.speed}</span>
                       </div>
-                      <div className="text-xs text-gray-400">Speed</div>
+                      <div className="text-xs text-black">Speed</div>
                     </div>
                   </div>
                 </CardContent>
@@ -386,7 +386,7 @@ const Page = () => {
                         className={`p-4 rounded-lg border cursor-pointer transition-all duration-300 hover:scale-[1.02] ${
                           selectedServer.id === server.id
                             ? "border-red-500 bg-red-500/10 shadow-lg shadow-red-500/20"
-                            : "border-gray-600 hover:border-gray-500 bg-gray-700/30"
+                            : "border-gray-600 hover:border-black bg-gray-700/30"
                         } ${server.status !== "online" ? "opacity-50 cursor-not-allowed" : ""}`}
                         onClick={() => handleServerChange(server)}
                       >
@@ -403,7 +403,7 @@ const Page = () => {
                         </div>
 
                         <div className="flex items-center justify-between text-sm">
-                          <div className="flex items-center gap-4 text-gray-400">
+                          <div className="flex items-center gap-4 text-black">
                             <span>{server.quality}</span>
                             <span>•</span>
                             <span>{server.location}</span>
@@ -414,20 +414,20 @@ const Page = () => {
                           </div>
                         </div>
 
-                        <div className="mt-2 text-xs text-gray-500">Speed: {server.speed}</div>
+                        <div className="mt-2 text-xs text-black">Speed: {server.speed}</div>
                       </div>
                     ))}
                   </div>
 
                   {/* Server Statistics */}
                   <div className="mt-6 pt-4 border-t border-gray-600">
-                    <div className="flex items-center justify-between text-sm text-gray-400">
+                    <div className="flex items-center justify-between text-sm text-black">
                       <span>Online Servers:</span>
                       <span className="text-green-400 font-medium">
                         {servers.filter((s) => s.status === "online").length}/{servers.length}
                       </span>
                     </div>
-                    <div className="flex items-center justify-between text-sm text-gray-400 mt-1">
+                    <div className="flex items-center justify-between text-sm text-black mt-1">
                       <span>Best Ping:</span>
                       <span className="text-green-400 font-medium">
                         {Math.min(...servers.filter((s) => s.status === "online").map((s) => s.ping))}ms

@@ -41,20 +41,20 @@ const MovieCardSkeleton = ({ size = "medium", showOverlay = true }) => {
 
         {/* Rating Badge Skeleton */}
         <div className="absolute top-3 right-3 bg-gray-600 rounded-full px-3 py-2 flex items-center gap-1">
-          <div className="w-3 h-3 bg-gray-500 rounded-full" />
-          <div className="w-6 h-3 bg-gray-500 rounded" />
+          <div className="w-3 h-3 bg-black rounded-full" />
+          <div className="w-6 h-3 bg-black rounded" />
         </div>
 
         {/* Media Type Badge Skeleton */}
         <div className="absolute top-2 left-2 bg-gray-600 rounded-full px-3 py-2 flex items-center gap-1">
-          <div className="w-3 h-3 bg-gray-500 rounded" />
-          <div className="w-12 h-3 bg-gray-500 rounded" />
+          <div className="w-3 h-3 bg-black rounded" />
+          <div className="w-12 h-3 bg-black rounded" />
         </div>
 
         {/* Adult Content Indicator Skeleton (sometimes visible) */}
         {Math.random() > 0.7 && (
           <div className="absolute bottom-3 right-3 bg-gray-600 rounded px-2 py-1">
-            <div className="w-6 h-3 bg-gray-500 rounded" />
+            <div className="w-6 h-3 bg-black rounded" />
           </div>
         )}
       </div>

@@ -209,7 +209,7 @@ const MovieCard = ({ movie, size = "responsive", showOverlay = true, onClick , t
             </h3>
 
             <div className="flex items-center gap-1 sm:gap-2 mt-1 flex-wrap">
-              <div className="flex items-center gap-1 text-gray-400">
+              <div className="flex items-center gap-1 text-gray-300">
                 <Calendar className="w-2 h-2 sm:w-3 sm:h-3" />
                 <span className={`${config.text}`}>{releaseYear}</span>
               </div>
@@ -218,7 +218,7 @@ const MovieCard = ({ movie, size = "responsive", showOverlay = true, onClick , t
               {movie.origin_country && movie.origin_country.length > 0 && (
                 <>
                   <span className="text-gray-600">•</span>
-                  <div className="flex items-center gap-1 text-gray-400">
+                  <div className="flex items-center gap-1 text-gray-300">
                     <span className={`${config.text} uppercase font-semibold`}>
                       {movie.origin_country[0]}
                     </span>
@@ -245,7 +245,7 @@ const MovieCard = ({ movie, size = "responsive", showOverlay = true, onClick , t
 
           {/* Overview */}
           <p
-            className={`${config.text} text-gray-400 line-clamp-2 sm:line-clamp-3 md:line-clamp-4 leading-relaxed`}
+            className={`${config.text} text-gray-300 line-clamp-2 sm:line-clamp-3 md:line-clamp-4 leading-relaxed`}
           >
             {movie.overview || "No description available."}
           </p>
