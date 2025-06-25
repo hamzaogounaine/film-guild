@@ -24,7 +24,7 @@ const CarouselCard = ({ movie, logoUrl }) => {
           <p className="text-sm">Logo not available</p>
         )}
         <div>
-          <p className="text-sm text-black flex items-center gap-1">
+          <p className="text-sm text-white flex items-center gap-1">
             {new Date(movie.release_date).getFullYear()} | {movie.vote_average.toFixed(1)} <StarIcon className="inline max-md:h-3 h-4 max-md:w-3 text-yellow-400 fill-yellow-400" /> 
           </p>
         </div>
