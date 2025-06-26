@@ -19,7 +19,12 @@ const searchSlice = createSlice({
     status: "idle",
     error: null,
   },
-  reducers: {},
+  reducers: {
+    reset : (state) => {
+      state.results = [];
+      state.status = 'idle'
+    }
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchSearch.pending, (state) => {
@@ -37,3 +42,4 @@ const searchSlice = createSlice({
 });
 
 export default searchSlice.reducer;
+export const {reset} = searchSlice.actions

@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
 import { useDispatch, useSelector } from "react-redux"
-import { fetchSearch } from "@/redux/searchSlice"
+import { fetchSearch, reset } from "@/redux/searchSlice"
 import Link from "next/link"
 import Image from "next/image"
 
@@ -78,6 +78,10 @@ const SearchPage = () => {
     }
   }, []); // Perform search when debounced query changes
   useEffect(() => {
+    if (!debouncedSearchQuery.trim()) {
+      dispatch(reset())
+    }
+
     if (debouncedSearchQuery.trim()) {
       dispatch(fetchSearch(debouncedSearchQuery));
 
