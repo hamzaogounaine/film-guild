@@ -24,6 +24,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import Image from "next/image"
+import { useAuth } from "@/lib/authContext"
 
 export default function Page() {
   const servers = [
@@ -104,7 +105,7 @@ export default function Page() {
 
   // State to track if localStorage has been loaded
   const [localStorageLoaded, setLocalStorageLoaded] = useState(false)
-
+  const {addToWatchList, watchlist} = useAuth();
   // Load progress from localStorage first
   useEffect(() => {
     if (id) {
@@ -125,8 +126,17 @@ export default function Page() {
     }
   }, [id])
 
+  const addMovieToWatchList = async (title , poster_path, id) => {
+    if(isWatchlisted) alert('already in watchlist')
+    const media_id = id;
+    const media_type = 'tv'
+    await addToWatchList(media_id , media_type ,title , poster_path );
+  }
+
   // Fetch TV show data after localStorage is loaded
   useEffect(() => {
+    if (watchlist.find(el => el.media_id === parseInt(id) && el.media_type === 'tv')) setIsLiked(true)
+
     if (!localStorageLoaded) return
 
     const fetchTVShowData = async () => {
@@ -419,7 +429,8 @@ export default function Page() {
                   <ChevronRight className="w-4 h-4 ml-1" />
                 </Button>
                 <Button
-                  onClick={() => setIsLiked(!isLiked)}
+                  onClick={() => addMovieToWatchList( tvShow.name, tvShow.poster_path, id )}
+                  disabled={isLiked}
                   variant="outline"
                   size="sm"
                   className={`border-gray-600 ${isLiked ? "bg-red-600 text-white" : "text-white hover:bg-gray-800"}`}

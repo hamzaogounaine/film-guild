@@ -206,7 +206,7 @@ const Page = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br bg-black text-white">
+    <div className="min-h-screen  bg-gradient-to-br bg-black text-white">
       {/* Hero Section with Movie Backdrop */}
       <div className="relative">
         {movie.backdrop_path && (
@@ -223,7 +223,7 @@ const Page = () => {
         )}
 
         {/* Video Player Section */}
-        <div className="relative z-10 pt-16 px-4 md:px-16">
+        <div className="relative z-10 pt-20 px-4 md:px-16">
           <div className="max-w-7xl mx-auto">
             {/* Movie Title & Quick Info */}
             <div className="mb-6">

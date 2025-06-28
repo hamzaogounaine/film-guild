@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
 import Image from "next/image"
 import Link from "next/link"
+import { useAuth } from "@/lib/authContext"
 
 // Utility functions
 const formatDate = (dateString) => {
@@ -49,10 +50,21 @@ const Page = () => {
   const { id } = useParams()
   const [isWatchlisted, setIsWatchlisted] = useState(false)
   const [activeTab, setActiveTab] = useState("overview")
+    const {addToWatchList, watchlist} = useAuth();
+  
 
   useEffect(() => {
+    if (watchlist.find(el => el.media_id === parseInt(id) && el.media_type === 'tv')) setIsWatchlisted(true)
+
     dispatch(fetchDetailsTv(id))
-  }, [dispatch, id])
+  }, [dispatch, id, watchlist])
+
+  const addMovieToWatchList = async (title , poster_path, id) => {
+    if(isWatchlisted) alert('already in watchlist')
+    const media_id = id;
+    const media_type = 'tv'
+    await addToWatchList(media_id , media_type ,title , poster_path );
+  }
 
   if (statusTv === "pending") {
     return <Loading />
@@ -171,7 +183,9 @@ const Page = () => {
                 <Button
                   size="sm"
                   variant="outline"
-                  onClick={() => setIsWatchlisted(!isWatchlisted)}
+                  disabled={isWatchlisted}
+                  onClick={() => addMovieToWatchList( tvDetails.name, tvDetails.poster_path, id )}
+
                   className={`border-gray-600 w-full sm:w-auto ${
                     isWatchlisted ? "bg-red-600 text-white" : "text-white hover:bg-gray-800"
                   }`}

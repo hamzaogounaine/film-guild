@@ -21,6 +21,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
 import Link from "next/link";
+import { useAuth } from "@/lib/authContext";
 
 // Utility functions
 const formatCurrency = (amount) => {
@@ -45,6 +46,9 @@ const getReleaseYear = (dateString) => {
   return new Date(dateString).getFullYear();
 };
 
+
+
+
 const Page = () => {
   const { statusMovie, movieDetails } = useSelector((state) => state.details);
   const dispatch = useDispatch();
@@ -52,9 +56,21 @@ const Page = () => {
   const [isWatchlisted, setIsWatchlisted] = useState(false);
   const [activeTab, setActiveTab] = useState("overview");
 
+  const {watchlist, addToWatchList} = useAuth();
+
+  
+  
   useEffect(() => {
-    dispatch(fetchDetails(id));
-  }, [dispatch, id]);
+    if (watchlist.find(el => el.media_id === parseInt(id) && el.media_type === 'movie')) setIsWatchlisted(true)
+      dispatch(fetchDetails(id));
+  }, [dispatch, id, watchlist]);
+  
+  const addMovieToWatchList = async (title , poster_path, id) => {
+    if(isWatchlisted) alert('already in watchlist')
+    const media_id = id;
+    const media_type = 'movie'
+    await addToWatchList(media_id , media_type ,title , poster_path );
+  }
 
   if (statusMovie === "pending") {
     return <Loading />;
@@ -182,7 +198,8 @@ const Page = () => {
                 <Button
                   size="sm"
                   variant="outline"
-                  onClick={() => setIsWatchlisted(!isWatchlisted)}
+                  disabled={isWatchlisted}
+                  onClick={() => addMovieToWatchList( movieDetails.title, movieDetails.poster_path, id )}
                   className={`border-gray-600 w-full sm:w-auto ${
                     isWatchlisted
                       ? "bg-red-600 text-white"
