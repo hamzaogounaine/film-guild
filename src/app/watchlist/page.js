@@ -278,7 +278,7 @@ export default function Watchlist() {
               <Search className="w-12 h-12 text-gray-600" />
             </div>
             <h3 className="text-2xl font-bold mb-2">No results found</h3>
-            <p className="text-gray-400 text-lg">No items in your watchlist match "{searchQuery}"</p>
+            <p className="text-gray-400 text-lg">No items in your watchlist match &quot;{searchQuery}&quot;</p>
           </div>
         )}
 
