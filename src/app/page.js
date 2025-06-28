@@ -5,6 +5,7 @@ import MovieCardSkeleton from "@/components/Main/carousel/cardSkeleton";
 import CardSkeleton from "@/components/Main/carousel/cardSkeleton";
 import MovieCarousel from "@/components/Main/carousel/Carousel";
 import TrendingCarousel from "@/components/Main/trending/Carousel";
+import { fetchTopRatedAnimations } from "@/redux/topAnimationsReducer";
 import { fetchTopRatedMovies } from "@/redux/topRatedSlice";
 import { fetchTopRatedTvShows } from "@/redux/topTvSlice";
 import React, { useEffect } from "react";
@@ -13,13 +14,14 @@ import { useDispatch, useSelector } from "react-redux";
 const Page = () => {
   const {movies } = useSelector(state => state.topmovies)
   const {tvShows } = useSelector(state => state.toptvshows)
+  const {animationMovies } = useSelector(state => state.topAnimations)
 
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(fetchTopRatedMovies())
     dispatch(fetchTopRatedTvShows())
-    
+    dispatch(fetchTopRatedAnimations())
 
   }, [dispatch])
 
@@ -28,17 +30,12 @@ const Page = () => {
       <div>
       <TrendingCarousel />
         <div className="p-4">
-          {/* <div className="flex gap-2 text-[2rem] items-center mt-4 mb-4">
-            Top content on
-            <RotatingText
-              texts={["Netflix", "HBO", "Amazon Prime", "Apple watch"]}
-              mainClassName="px-2 sm:px-2 md:px-3 bg-red-500 text-white md:text-md text-sm overflow-hidden py-0.5 sm:py-1 md:py-2 justify-center rounded-lg"
-            />
-          </div> */}
+         
         <MovieCarousel items={movies} title="Top rated movies"/>
         {/* <script async="async" data-cfasync="false" src="//pl27003266.profitableratecpm.com/3212e516f6d6fe8f8af9c77aeb4506d0/invoke.js"></script>
 <div id="container-3212e516f6d6fe8f8af9c77aeb4506d0"></div> */}
         <MovieCarousel items={tvShows} title="Top rated tv shows"  tv={true}/>
+        <MovieCarousel items={animationMovies} title="Top rated animation movies" />
        
         </div>
       </div>

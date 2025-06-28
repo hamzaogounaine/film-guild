@@ -9,9 +9,9 @@ import { useAuth } from "@/lib/authContext"
 const MobileMenu = () => {
   const navItems = [
     { label: "Home", href: "/", icon: <HomeIcon size={24} /> },
-    { label: "Movies", href: "/movie", icon: <Clapperboard size={24} /> },
+    // { label: "Movies", href: "/movie", icon: <Clapperboard size={24} /> },
     { label: "Search", href: "/search", icon: <Search size={24} /> },
-    { label: "TV Shows", href: "/tv", icon: <Tv2Icon size={24} /> },
+    // { label: "TV Shows", href: "/tv", icon: <Tv2Icon size={24} /> },
     { label: "Watchlist", href: "/watchlist", icon: <TvMinimalPlay size={24} /> },
   ]
 

@@ -100,8 +100,22 @@ export default function Watchlist() {
   }
 
   if (!user) {
-    router.push("/signin")
-    return null
+    return (
+      <div className="min-h-screen pt-16 bg-gradient-to-br from-gray-950 via-black to-gray-900 text-white flex items-center justify-center">
+      <div className="text-center">
+        <div className="w-24 h-24 bg-gradient-to-br from-gray-800 to-gray-700 rounded-3xl flex items-center justify-center mx-auto mb-8">
+        <LogOut className="w-12 h-12 text-gray-500" />
+        </div>
+        <h2 className="text-3xl font-bold mb-4 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+        Authentication Required
+        </h2>
+        <p className="text-gray-400 mb-8 text-lg">
+        Please sign in to view your watchlist
+        </p>
+        
+      </div>
+      </div>
+    )
   }
 
   return (

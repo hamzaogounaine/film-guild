@@ -5,6 +5,8 @@ import SearchReduer from './searchSlice'
 import topRatedSliceTvShows from './topTvSlice'
 import topRatedMoviesReducer from './topRatedSlice'
 import TvDetailsReducer from './tvDetailsSlice'
+import topRatedAnimationsReducer from './topAnimationsReducer'
+
 export const store = configureStore({
     reducer : {
         trending : trendingReducer,
@@ -13,6 +15,7 @@ export const store = configureStore({
         search : SearchReduer,
         topmovies : topRatedMoviesReducer,
         toptvshows : topRatedSliceTvShows,
+        topAnimations : topRatedAnimationsReducer
 
     }
 })

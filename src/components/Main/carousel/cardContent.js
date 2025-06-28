@@ -27,7 +27,6 @@ const genreMap = {
   53: "Thriller",
   10752: "War",
   37: "Western",
-  // TV Show specific genres
   10759: "Action & Adventure",
   10762: "Kids",
   10763: "News",
@@ -38,7 +37,7 @@ const genreMap = {
   10768: "War & Politics",
 };
 
-const MovieCard = ({ movie, size = "responsive", showOverlay = true, onClick , tv=false}) => {
+const MovieCard = ({ movie, size = "responsive", showOverlay = true, onClick, tv = false }) => {
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
 
@@ -71,20 +70,19 @@ const MovieCard = ({ movie, size = "responsive", showOverlay = true, onClick , t
     }
   };
 
-  // Size configurations
   const getMediaTypeIcon = (mediaType) => {
-    return movie === "tv" ? <Tv className="w-3 h-3" /> : <Film className="w-3 h-3" />
-  
-  }
+    return mediaType === "tv" ? <Tv className="w-3 h-3" /> : <Film className="w-3 h-3" />;
+  };
 
   const getMediaTypeLabel = (mediaType) => {
-    return mediaType === "tv" ? "TV Show" : "Movie"
-  }
+    return mediaType === "tv" ? "TV Show" : "Movie";
+  };
 
+  // Updated size configurations
   const sizeConfig = {
     responsive: {
-      container: "h-[26rem] sm:h-[30rem] md:h-[28rem] lg:h-[32rem] xl:h-[37rem]",
-      poster: "",
+      container: "min-h-[16rem] w-full flex flex-col", // Use min-height and flex for content-driven height
+      poster: "aspect-[2/3] w-full", // Standard poster aspect ratio
       title: "text-xs sm:text-sm md:text-base lg:text-lg",
       text: "text-xs sm:text-xs md:text-sm",
       padding: "p-2 sm:p-3 md:p-4",
@@ -98,18 +96,16 @@ const MovieCard = ({ movie, size = "responsive", showOverlay = true, onClick , t
       className={`${config.container} bg-gray-800 rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer group relative border border-gray-700 hover:border-gray-600`}
       onClick={handleCardClick}
     >
-      <Link href={`/${mediaType}/${movie.id}`} className="block h-full">
+      <Link href={`/${mediaType}/${movie.id}`} className="flex flex-col h-full">
         {/* Poster Image */}
-        <div
-          className={`relative ${config.poster} overflow-hidden bg-gray-700`}
-        >
+        <div className={`relative ${config.poster} overflow-hidden bg-gray-700`}>
           {posterUrl ? (
             <Image
-              height={500}
-              width={300}
-              src={posterUrl || "/placeholder.svg"}
+              src={posterUrl}
               alt={title}
-              className={`w-full h-full object-cover transition-all duration-500 group-hover:scale-110 ${
+              fill
+              sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
+              className={`object-cover transition-all duration-500 group-hover:scale-110 ${
                 imageLoaded ? "opacity-100" : "opacity-0"
               }`}
               onLoad={() => setImageLoaded(true)}
@@ -159,13 +155,13 @@ const MovieCard = ({ movie, size = "responsive", showOverlay = true, onClick , t
           {showOverlay && (
             <div className="absolute inset-0 bg-black/60 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col justify-center items-center gap-2 md:gap-3">
               <Link href={`/watch/${mediaType}/${movie.id}`}>
-              <Button
-                size="sm"
-                className="bg-red-600 hover:bg-red-700 text-white rounded-full w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 p-0 transform scale-0 group-hover:scale-100 transition-transform duration-300 delay-100"
-              >
-                <Play className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 fill-current" />
-              </Button>
-            </Link>
+                <Button
+                  size="sm"
+                  className="bg-red-600 hover:bg-red-700 text-white rounded-full w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 p-0 transform scale-0 group-hover:scale-100 transition-transform duration-300 delay-100"
+                >
+                  <Play className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 fill-current" />
+                </Button>
+              </Link>
               <div className="flex gap-1 sm:gap-2 transform translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300 delay-200">
                 <Button
                   size="sm"
@@ -179,7 +175,6 @@ const MovieCard = ({ movie, size = "responsive", showOverlay = true, onClick , t
                     }`}
                   />
                 </Button>
-
                 <Button
                   size="sm"
                   variant="outline"
@@ -249,7 +244,6 @@ const MovieCard = ({ movie, size = "responsive", showOverlay = true, onClick , t
           >
             {movie.overview || "No description available."}
           </p>
-
         </div>
 
         {/* Shine Effect */}

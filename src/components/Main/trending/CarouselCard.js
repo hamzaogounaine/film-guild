@@ -17,7 +17,7 @@ const CarouselCard = ({ movie, logoUrl }) => {
             width={200}
             height={100}
             src={logoUrl}
-            alt={`${movie.title} logo`}
+            alt={`${movie.title || movie.name} logo`}
             className="w-full mb-2  object-contain max-md:w-1/2"
           />
         ) : (
@@ -25,18 +25,18 @@ const CarouselCard = ({ movie, logoUrl }) => {
         )}
         <div>
           <p className="text-sm text-white flex items-center gap-1">
-            {new Date(movie.release_date).getFullYear()} | {movie.vote_average.toFixed(1)} <StarIcon className="inline max-md:h-3 h-4 max-md:w-3 text-yellow-400 fill-yellow-400" /> 
+            {new Date(movie.release_date || movie.first_air_date).getFullYear()} | {movie.vote_average.toFixed(1)} <StarIcon className="inline max-md:h-3 h-4 max-md:w-3 text-yellow-400 fill-yellow-400" /> 
           </p>
         </div>
         <p className="max-md:text-sm text-lg">{movie.overview.slice(0, 200)}...</p>
         <div className="flex gap-2">
           <Button size={'lg'}>
-            <Link href={`/watch/movie/${movie.id}`} >
+            <Link href={`/watch/${movie.media_type}/${movie.id}`} >
             Watch
             </Link>
           </Button>
           <Button variant="outline" className="ms-2 text-foreground" size={'lg'} >
-            <Link href={`/movie/${movie.id}`} className="flex gap-1 items-center" >
+            <Link href={`/${movie.media_type}/${movie.id}`} className="flex gap-1 items-center" >
             More Info <Info />
             </Link>
             </Button>
