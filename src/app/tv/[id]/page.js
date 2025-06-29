@@ -4,13 +4,14 @@ import { fetchDetailsTv } from "@/redux/tvDetailsSlice"
 import { useParams } from "next/navigation"
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { Star, Play, Heart, Share2, Calendar, Clock, Tv, Globe, Building, PlayCircle } from "lucide-react"
+import { Star, Play, Heart, Share2, Calendar, Clock, Tv, Globe, Building, PlayCircle, AlertTriangle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
 import Image from "next/image"
 import Link from "next/link"
 import { useAuth } from "@/lib/authContext"
+import { Alert, AlertDescription } from "@/components/ui/alert"
 
 // Utility functions
 const formatDate = (dateString) => {
@@ -50,7 +51,7 @@ const Page = () => {
   const { id } = useParams()
   const [isWatchlisted, setIsWatchlisted] = useState(false)
   const [activeTab, setActiveTab] = useState("overview")
-    const {addToWatchList, watchlist} = useAuth();
+    const {addToWatchList, watchlist , error} = useAuth();
   
 
   useEffect(() => {
@@ -88,6 +89,12 @@ const Page = () => {
     <div className="min-h-screen bg-black text-white pb-16">
       {/* Hero Section */}
       <div className="relative h-[80vh] sm:h-[80vh] lg:h-[70vh] overflow-hidden">
+      {error && (
+          <Alert className="fixed z-50 top-22 right-3 max-w-md  bg-red-500/50 border-red-400/50 text-red-500 backdrop-blur-xl">
+            <AlertTriangle className="h-4 w-4" />
+            <AlertDescription className={'text-white'}>Error: {error}</AlertDescription>
+          </Alert>
+        )}
         <Image
           width={1920}
           height={1080}

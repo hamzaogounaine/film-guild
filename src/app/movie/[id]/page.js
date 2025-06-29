@@ -15,6 +15,7 @@ import {
   Award,
   Globe,
   Building,
+  AlertTriangle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -22,6 +23,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
 import Link from "next/link";
 import { useAuth } from "@/lib/authContext";
+import Head from "next/head";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 // Utility functions
 const formatCurrency = (amount) => {
@@ -56,7 +59,7 @@ const Page = () => {
   const [isWatchlisted, setIsWatchlisted] = useState(false);
   const [activeTab, setActiveTab] = useState("overview");
 
-  const {watchlist, addToWatchList} = useAuth();
+  const {watchlist, addToWatchList, error} = useAuth();
 
   
   
@@ -92,9 +95,18 @@ const Page = () => {
   const formattedRevenue = formatCurrency(movieDetails.revenue);
 
   return (
-    <div className="min-h-screen bg-black text-white pb-16">
+    <div className="min-h-screen bg-black text-white pb-16 ">
+      <Head>
+      <title>{movieDetails.title} | Film Guild</title>
+      </Head>
       {/* Hero Section */}
       <div className="relative h-[80vh] sm:h-[80vh] lg:h-[70vh] overflow-hidden">
+      {error && (
+          <Alert className="fixed z-50 top-22 right-3 max-w-md  bg-red-500/50 border-red-400/50 text-red-500 backdrop-blur-xl">
+            <AlertTriangle className="h-4 w-4" />
+            <AlertDescription className={'text-white'}>Error: {error}</AlertDescription>
+          </Alert>
+        )}
         <Image
           width={256}
           height={384}

@@ -1,15 +1,18 @@
 "use client"
-import GradientText from "@/components/effects/gradientText";
-import RotatingText from "@/components/effects/RotateText";
-import MovieCardSkeleton from "@/components/Main/carousel/cardSkeleton";
-import CardSkeleton from "@/components/Main/carousel/cardSkeleton";
 import MovieCarousel from "@/components/Main/carousel/Carousel";
 import TrendingCarousel from "@/components/Main/trending/Carousel";
 import { fetchTopRatedAnimations } from "@/redux/topAnimationsReducer";
 import { fetchTopRatedMovies } from "@/redux/topRatedSlice";
 import { fetchTopRatedTvShows } from "@/redux/topTvSlice";
+import Head from "next/head";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+
+
+// export const metadata = {
+//   title : 'Film Guild',
+ 
+//  }
 
 const Page = () => {
   const {movies } = useSelector(state => state.topmovies)
@@ -27,6 +30,11 @@ const Page = () => {
 
   return (
     <div className="max-md:pb-16">
+      <Head>
+      <title>Film Guild</title>
+      <link rel="icon" href="../../public/favicon.ico" />
+      </Head>
+        
       <div>
       <TrendingCarousel />
         <div className="p-4">

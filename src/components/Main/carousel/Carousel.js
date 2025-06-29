@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import MovieCard from "./cardContent"
 import MovieCardSkeleton from "./cardSkeleton"
+import { useAuth } from "@/lib/authContext"
 
 const MovieCarousel = ({
 title = "Movie Collection",

@@ -12,6 +12,7 @@ const MainLayout = ({children}) => {
   return (
     <AuthProvider>
     <div className={`min-h-screen transition-colors dark duration-300  bg-background text-white`}>
+      
     <div className="relative z-10">
       <Navbar />
       <main className=" ">
