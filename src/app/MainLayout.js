@@ -5,6 +5,8 @@ import { useSelector } from 'react-redux';
 import MobileMenu from '@/components/Navbar/MobileMenu';
 import { AuthProvider } from '@/lib/authContext';
 
+
+
 const MainLayout = ({children}) => {
   
   // Define colors based on theme

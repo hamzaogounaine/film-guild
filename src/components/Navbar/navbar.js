@@ -20,6 +20,7 @@ import { DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuT
 import { supabase } from "@/lib/supabase"
 import { useRouter } from "next/navigation"
 import AuthModal from "./auth-modal"
+import Image from "next/image"
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false)
@@ -70,7 +71,7 @@ export function Navbar() {
   return (
     <>
       <nav
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 backdrop-blur-md border-b border-primary/20 shadow-sm ${
+        className={`fixed top-0 py-2 left-0 right-0 z-50 transition-all duration-300 backdrop-blur-md border-b border-primary/20 shadow-sm ${
           isScrolled ? "bg-background/80" : "bg-background/60"
         }`}
       >
@@ -80,11 +81,15 @@ export function Navbar() {
             <div className="flex-shrink-0">
               <Link
                 href={"/"}
-                className={`logo text-3xl font-bold transition-colors duration-300 ${
+                className={`logo text-3xl font-bold transition-colors duration-300 flex items-center ${
                   isScrolled ? "text-foreground" : "text-foreground"
                 }`}
               >
+                <Image src='/logo.png' width={70} height={70} alt='logo' />
+                <p>
+
                 Film <span className="text-red-500">Guild</span>
+                </p>
               </Link>
             </div>
 

@@ -9,11 +9,6 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 
-// export const metadata = {
-//   title : 'Film Guild',
- 
-//  }
-
 const Page = () => {
   const {movies } = useSelector(state => state.topmovies)
   const {tvShows } = useSelector(state => state.toptvshows)
@@ -30,10 +25,7 @@ const Page = () => {
 
   return (
     <div className="max-md:pb-16">
-      <Head>
-      <title>Film Guild</title>
-      <link rel="icon" href="../../public/favicon.ico" />
-      </Head>
+     
         
       <div>
       <TrendingCarousel />
