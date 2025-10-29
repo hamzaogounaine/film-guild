@@ -1,4 +1,6 @@
-
+// ----------------------------------------------------------------------
+// 4. CLIENT COMPONENT IMPORTS AND DIRECTIVE
+// ----------------------------------------------------------------------
 "use client"; // <-- This directive must be placed here
 import Image from "next/image"; // Image can be used on the server component
 
@@ -8,6 +10,7 @@ import {
     Star, Calendar, Clock, Wifi, WifiOff, Server, Heart, Share2, Eye, Zap,
     ChevronLeft, ChevronRight, List, Grid3X3,
 } from "lucide-react";
+import axios from "axios"; // Keep axios for the client-side episode fetching
 
 // Import all Client-Side UI components
 import { Card, CardContent } from "@/components/ui/card";
@@ -16,15 +19,17 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useAuth } from "@/lib/authContext"; // Hook for watchlist
 
+// ----------------------------------------------------------------------
+// 5. CLIENT COMPONENT DEFINITION
+// ----------------------------------------------------------------------
 export const TVShowClientComponent = ({ initialTvShowData, params, servers }) => {
     
-    const { id, season: urlSeason, episode: urlEpisode } = params;
+    const { id: rawId, season: urlSeason, episode: urlEpisode } = params;
+    const id = Number.parseInt(rawId); 
 
-    // Initialize state with data passed from the server
-    const [tvShow, setTvShow] = useState(initialTvShowData);
+    const [tvShow] = useState(initialTvShowData);
     const [selectedServer, setSelectedServer] = useState(servers[0]);
     
-    // Use URL params or defaults/localStorage for episode/season selection
     const initialSeason = urlSeason ? Number.parseInt(urlSeason) : 1;
     const initialEpisode = urlEpisode ? Number.parseInt(urlEpisode) : 1;
 
@@ -32,12 +37,10 @@ export const TVShowClientComponent = ({ initialTvShowData, params, servers }) =>
     const [selectedEpisode, setSelectedEpisode] = useState(initialEpisode);
     
     const [episodes, setEpisodes] = useState([]);
-    const [isLoading, setIsLoading] = useState(false); // Data is already loaded
     const [isEpisodesLoading, setIsEpisodesLoading] = useState(false);
     const [isLiked, setIsLiked] = useState(false);
     const [isServerSwitching, setIsServerSwitching] = useState(false);
     const [episodeViewMode, setEpisodeViewMode] = useState("list");
-    const [localStorageLoaded, setLocalStorageLoaded] = useState(false);
     
     const {addToWatchList, watchlist} = useAuth();
     
@@ -45,7 +48,7 @@ export const TVShowClientComponent = ({ initialTvShowData, params, servers }) =>
     // LOGIC & EFFECTS
     // ----------------------------------------------------------------------
 
-    // Load progress from localStorage first
+    // Load progress from localStorage first (runs once on mount)
     useEffect(() => {
         if (id) {
             const storageKey = `tv-progress-${id}`;
@@ -74,13 +77,12 @@ export const TVShowClientComponent = ({ initialTvShowData, params, servers }) =>
             // Apply the determined values
             setSelectedSeason(seasonToSet);
             setSelectedEpisode(episodeToSet);
-            setLocalStorageLoaded(true);
         }
-    }, [id]); // Depend on ID
+    }, [id, initialTvShowData.seasons, initialEpisode, initialSeason]);
 
     // Check watchlist status
     useEffect(() => {
-        if (watchlist.find(el => el.media_id === parseInt(id) && el.media_type === 'tv')) {
+        if (watchlist.find(el => el.media_id === id && el.media_type === 'tv')) {
             setIsLiked(true);
         }
     }, [id, watchlist]);
@@ -98,17 +100,22 @@ export const TVShowClientComponent = ({ initialTvShowData, params, servers }) =>
         }
     }, [id, selectedSeason, selectedEpisode]);
 
-    // Fetch episodes for the selected season
+    // Fetch episodes for the selected season (Runs whenever selectedSeason changes)
     useEffect(() => {
         const fetchEpisodes = async () => {
-            if (!selectedSeason || !id || !localStorageLoaded) return;
+            if (!selectedSeason || !id) return; 
+            
+            console.log(`Fetching episodes for TV ID: ${id}, Season: ${selectedSeason}`); // ADDED LOG
 
             try {
                 setIsEpisodesLoading(true);
                 const res = await axios.get(
                     `${process.env.NEXT_PUBLIC_BASE_URL}/tv/${id}/season/${selectedSeason}?api_key=${process.env.NEXT_PUBLIC_TMDB_API}`,
                 );
+                
                 setEpisodes(res.data.episodes || []);
+                console.log(`Fetched ${res.data.episodes?.length || 0} episodes.`); // ADDED LOG
+
             } catch (error) {
                 console.error("Error fetching episodes:", error);
                 setEpisodes([]);
@@ -117,19 +124,19 @@ export const TVShowClientComponent = ({ initialTvShowData, params, servers }) =>
             }
         };
         fetchEpisodes();
-    }, [selectedSeason, id, localStorageLoaded]);
+    }, [selectedSeason, id]); // Simplified dependencies
     
     // ----------------------------------------------------------------------
-    // HANDLERS & HELPERS (Keep your existing functions)
+    // HANDLERS & HELPERS (No change needed here)
     // ----------------------------------------------------------------------
 
-    const addMovieToWatchList = async (title, poster_path, media_id) => {
-        if (isLiked) { // Use isLiked to check for watchlisted status
+    const addMovieToWatchList = async (title, poster_path) => {
+        if (isLiked) {
             alert('Already in watchlist');
             return;
         }
-        await addToWatchList(media_id, 'tv', title, poster_path);
-        setIsLiked(true); // Assuming API call succeeds
+        await addToWatchList(id, 'tv', title, poster_path);
+        setIsLiked(true);
     };
 
     const handleServerChange = (server) => {
@@ -228,17 +235,7 @@ export const TVShowClientComponent = ({ initialTvShowData, params, servers }) =>
     const currentEpisode = getCurrentEpisode();
     const currentSeason = getCurrentSeason();
 
-    if (!localStorageLoaded) {
-        // Simple loading screen while we wait for localStorage to determine initial episode/season
-        return (
-            <div className="min-h-screen bg-gradient-to-br bg-gray-900 flex items-center justify-center">
-                <div className="text-center">
-                    <div className="w-16 h-16 border-4 border-red-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-                    <p className="text-white text-lg">Initializing Player...</p>
-                </div>
-            </div>
-        );
-    }
+    // REMOVED the localStorageLoaded check, as per the previous fix.
 
     return (
         <div className="min-h-screen bg-gradient-to-br bg-gray-900 text-white">
@@ -334,7 +331,7 @@ export const TVShowClientComponent = ({ initialTvShowData, params, servers }) =>
                                     <ChevronRight className="w-4 h-4 ml-1" />
                                 </Button>
                                 <Button
-                                    onClick={() => addMovieToWatchList(tvShow.name, tvShow.poster_path, id)}
+                                    onClick={() => addMovieToWatchList(tvShow.name, tvShow.poster_path)} 
                                     disabled={isLiked}
                                     variant="outline"
                                     size="sm"
@@ -414,7 +411,6 @@ export const TVShowClientComponent = ({ initialTvShowData, params, servers }) =>
                             {/* Season & Episode Selectors / List */}
                             <Card className="bg-gray-800/50 backdrop-blur-sm border-gray-700">
                                 <CardContent className="p-6">
-                                    {/* ... (Episodes UI goes here) ... */}
                                     <div className="flex items-center justify-between mb-4">
                                         <h3 className="text-xl font-bold flex items-center gap-2">
                                             <List className="w-5 h-5 text-blue-400" />
@@ -444,16 +440,16 @@ export const TVShowClientComponent = ({ initialTvShowData, params, servers }) =>
                                                 </SelectTrigger>
                                                 <SelectContent className="bg-gray-800 border-gray-700">
                                                     {tvShow.seasons
-                                                        ?.filter((season) => season.season_number > 0)
-                                                        .map((season) => (
-                                                            <SelectItem
-                                                                key={season.id}
-                                                                value={season.season_number.toString()}
-                                                                className="text-white hover:bg-gray-700"
-                                                            >
-                                                                Season {season.season_number} ({season.episode_count} episodes)
-                                                            </SelectItem>
-                                                        ))}
+                                                         ?.filter((season) => season.season_number > 0)
+                                                         .map((season) => (
+                                                             <SelectItem
+                                                                 key={season.id}
+                                                                 value={season.season_number.toString()}
+                                                                 className="text-white hover:bg-gray-700"
+                                                             >
+                                                                 Season {season.season_number} ({season.episode_count} episodes)
+                                                             </SelectItem>
+                                                         ))}
                                                 </SelectContent>
                                             </Select>
                                         </div>
@@ -465,70 +461,78 @@ export const TVShowClientComponent = ({ initialTvShowData, params, servers }) =>
                                             <div className="w-8 h-8 border-4 border-red-500 border-t-transparent rounded-full animate-spin"></div>
                                         </div>
                                     ) : (
-                                        <div className={episodeViewMode === "grid" ? "grid grid-cols-1 md:grid-cols-2 gap-4" : "space-y-3"}>
-                                            {episodes.map((episode) => (
-                                                <div
-                                                    key={episode.id}
-                                                    className={`p-4 rounded-lg border cursor-pointer transition-all duration-300 hover:scale-[1.02] ${
-                                                        selectedEpisode === episode.episode_number
-                                                            ? "border-red-500 bg-red-500/10 shadow-lg shadow-red-500/20"
-                                                            : "border-gray-600 hover:border-gray-500 bg-gray-700/30"
-                                                    }`}
-                                                    onClick={() => handleEpisodeChange(episode.episode_number)}
-                                                >
-                                                    <div className="flex gap-4">
-                                                        {/* Episode Thumbnail */}
-                                                        <div className="flex-shrink-0">
-                                                            <Image
-                                                                width={episodeViewMode === "grid" ? 200 : 120}
-                                                                height={episodeViewMode === "grid" ? 113 : 68}
-                                                                src={
-                                                                    episode.still_path
-                                                                        ? `https://image.tmdb.org/t/p/w300${episode.still_path}`
-                                                                        : "/placeholder.svg?height=113&width=200"
-                                                                }
-                                                                alt={episode.name || "Episode"}
-                                                                className={`${
-                                                                    episodeViewMode === "grid" ? "w-32 h-18" : "w-20 h-12"
-                                                                } object-cover rounded flex-shrink-0 bg-gray-700`}
-                                                            />
-                                                            {/* Episode Number Overlay */}
-                                                            <div className="relative -mt-6 ml-2">
-                                                                <div className="bg-black/80 text-white text-xs px-2 py-1 rounded">
-                                                                    E{episode.episode_number}
+                                        // MODIFIED: Check if episodes is empty AND not loading to show feedback
+                                        episodes.length === 0 ? (
+                                            <div className="text-center py-8 text-gray-400">
+                                                No episodes found for this season.
+                                                <p className="text-sm mt-2">Check console for fetch errors or try selecting a different season.</p>
+                                            </div>
+                                        ) : (
+                                            <div className={episodeViewMode === "grid" ? "grid grid-cols-1 md:grid-cols-2 gap-4" : "space-y-3"}>
+                                                {episodes.map((episode) => (
+                                                    <div
+                                                        key={episode.id}
+                                                        className={`p-4 rounded-lg border cursor-pointer transition-all duration-300 hover:scale-[1.02] ${
+                                                             selectedEpisode === episode.episode_number
+                                                                 ? "border-red-500 bg-red-500/10 shadow-lg shadow-red-500/20"
+                                                                 : "border-gray-600 hover:border-gray-500 bg-gray-700/30"
+                                                         }`}
+                                                        onClick={() => handleEpisodeChange(episode.episode_number)}
+                                                    >
+                                                        <div className="flex gap-4">
+                                                            {/* Episode Thumbnail */}
+                                                            <div className="flex-shrink-0">
+                                                                <Image
+                                                                    width={episodeViewMode === "grid" ? 200 : 120}
+                                                                    height={episodeViewMode === "grid" ? 113 : 68}
+                                                                    src={
+                                                                         episode.still_path
+                                                                             ? `https://image.tmdb.org/t/p/w300${episode.still_path}`
+                                                                             : "/placeholder.svg?height=113&width=200"
+                                                                     }
+                                                                    alt={episode.name || "Episode"}
+                                                                    className={`${
+                                                                         episodeViewMode === "grid" ? "w-32 h-18" : "w-20 h-12"
+                                                                     } object-cover rounded flex-shrink-0 bg-gray-700`}
+                                                                />
+                                                                {/* Episode Number Overlay */}
+                                                                <div className="relative -mt-6 ml-2">
+                                                                    <div className="bg-black/80 text-white text-xs px-2 py-1 rounded">
+                                                                        E{episode.episode_number}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div className="flex-1 min-w-0">
+                                                                <div className="flex items-center gap-2 mb-1">
+                                                                    <span className="font-semibold text-sm">Episode {episode.episode_number}</span>
+                                                                    {episode.vote_average > 0 && (
+                                                                        <div className="flex items-center gap-1">
+                                                                            <Star className="w-3 h-3 text-yellow-400 fill-current" />
+                                                                            <span className="text-xs text-gray-400">{episode.vote_average.toFixed(1)}</span>
+                                                                        </div>
+                                                                    )}
+                                                                    {/* Runtime Badge */}
+                                                                    {episode.runtime && (
+                                                                        <Badge variant="outline" className="text-xs border-gray-600 text-gray-400">
+                                                                            {formatRuntime(episode.runtime)}
+                                                                        </Badge>
+                                                                    )}
+                                                                </div>
+                                                                <h4 className="font-medium text-white mb-1 line-clamp-1">{episode.name}</h4>
+                                                                <p className="text-gray-400 text-xs line-clamp-2 leading-relaxed">
+                                                                    {episode.overview || "No description available."}
+                                                                </p>
+                                                                <div className="flex items-center gap-4 mt-2 text-xs text-gray-500">
+                                                                    {episode.air_date && <span>Aired: {formatDate(episode.air_date)}</span>}
+                                                                    {episode.vote_count > 0 && <span>{episode.vote_count} votes</span>}
                                                                 </div>
                                                             </div>
                                                         </div>
-
-                                                        <div className="flex-1 min-w-0">
-                                                            <div className="flex items-center gap-2 mb-1">
-                                                                <span className="font-semibold text-sm">Episode {episode.episode_number}</span>
-                                                                {episode.vote_average > 0 && (
-                                                                    <div className="flex items-center gap-1">
-                                                                        <Star className="w-3 h-3 text-yellow-400 fill-current" />
-                                                                        <span className="text-xs text-gray-400">{episode.vote_average.toFixed(1)}</span>
-                                                                    </div>
-                                                                )}
-                                                                {/* Runtime Badge */}
-                                                                {episode.runtime && (
-                                                                    <Badge variant="outline" className="text-xs border-gray-600 text-gray-400">
-                                                                        {formatRuntime(episode.runtime)}
-                                                                    </Badge>
-                                                                )}
-                                                            </div>
-                                                            <h4 className="font-medium text-white mb-1 line-clamp-1">{episode.name}</h4>
-                                                            <p className="text-gray-400 text-xs line-clamp-2 leading-relaxed">
-                                                                {episode.overview || "No description available."}
-                                                            </p>
-                                                            <div className="flex items-center gap-4 mt-2 text-xs text-gray-500">
-                                                                {episode.air_date && <span>Aired: {formatDate(episode.air_date)}</span>}
-                                                                {episode.vote_count > 0 && <span>{episode.vote_count} votes</span>}
-                                                            </div>
-                                                        </div>
                                                     </div>
-                                                </div>
-                                            ))}
-                                        </div>
+                                                ))}
+                                            </div>
+                                        )
                                     )}
                                 </CardContent>
                             </Card>
@@ -586,10 +590,10 @@ export const TVShowClientComponent = ({ initialTvShowData, params, servers }) =>
                                             <div
                                                 key={server.id}
                                                 className={`p-4 rounded-lg border cursor-pointer transition-all duration-300 hover:scale-[1.02] ${
-                                                    selectedServer.id === server.id
-                                                        ? "border-red-500 bg-red-500/10 shadow-lg shadow-red-500/20"
-                                                        : "border-gray-600 hover:border-gray-500 bg-gray-700/30"
-                                                } ${server.status !== "online" ? "opacity-50 cursor-not-allowed" : ""}`}
+                                                     selectedServer.id === server.id
+                                                         ? "border-red-500 bg-red-500/10 shadow-lg shadow-red-500/20"
+                                                         : "border-gray-600 hover:border-gray-500 bg-gray-700/30"
+                                                     } ${server.status !== "online" ? "opacity-50 cursor-not-allowed" : ""}`}
                                                 onClick={() => handleServerChange(server)}
                                             >
                                                 <div className="flex items-center justify-between mb-2">
