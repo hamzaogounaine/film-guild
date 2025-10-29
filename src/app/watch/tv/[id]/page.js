@@ -33,37 +33,6 @@ async function getTVShowData(id) {
 // 2. DYNAMIC METADATA FUNCTION (Server Component)
 // ----------------------------------------------------------------------
 
-export async function generateMetadata({ params }) {
-    const tvShow = await getTVShowData(params.id);
-
-    if (!tvShow) {
-        return { title: "TV Show Not Found" };
-    }
-
-    const firstAirYear = tvShow.first_air_date ? new Date(tvShow.first_air_date).getFullYear() : 'N/A';
-
-    return {
-        title: `${tvShow.name} (${firstAirYear})`,
-        description: tvShow.overview
-            ? tvShow.overview.substring(0, 160) + '...'
-            : `Watch the TV show ${tvShow.name} with multiple server options.`,
-        openGraph: {
-            title: `${tvShow.name} | Watch Series Now on Film Guild`,
-            description: tvShow.overview,
-            images: [
-                {
-                    url: tvShow.backdrop_path
-                        ? `https://image.tmdb.org/t/p/original${tvShow.backdrop_path}`
-                        : '/opengraph-image.png',
-                    width: 1200,
-                    height: 630,
-                    alt: tvShow.name,
-                },
-            ],
-        },
-    };
-}
-
 // ----------------------------------------------------------------------
 // 3. MAIN SERVER COMPONENT
 // ----------------------------------------------------------------------

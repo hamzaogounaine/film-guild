@@ -25,41 +25,6 @@ async function getMovieData(id) {
 // ----------------------------------------------------------------------
 // This runs before the component and sets the head tags.
 
-export async function generateMetadata({ params }) {
-  const movie = await getMovieData(params.id);
-
-  if (!movie) {
-    return {
-      title: "Movie Not Found ",
-    };
-  }
-
-  // Use the fetched movie title and details for SEO
-  const releaseYear = movie.release_date ? new Date(movie.release_date).getFullYear() : 'N/A';
-  
-  return {
-    title: `${movie.title} (${releaseYear})`,
-    description: movie.overview 
-      ? movie.overview.substring(0, 160) + '...' 
-      : `Watch the movie ${movie.title} with multiple server options and high quality streaming.`,
-    
-    openGraph: {
-      title: `${movie.title} | Watch Now on Film Guild`,
-      description: movie.overview,
-      images: [
-        {
-          url: movie.backdrop_path 
-            ? `https://image.tmdb.org/t/p/original${movie.backdrop_path}` 
-            : '/opengraph-image.png', // Fallback image
-          width: 1200,
-          height: 630,
-          alt: movie.title,
-        },
-      ],
-    },
-  };
-}
-
 // ----------------------------------------------------------------------
 // 3. PAGE COMPONENT (Server Component Wrapper)
 // ----------------------------------------------------------------------
